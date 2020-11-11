@@ -1,0 +1,21 @@
+{%- set welcome = "Welcome to {} Documentation!".format(project_name) %}
+{%- set welcome_ruler = "=" * welcome|length %}
+{{- welcome }}
+{{ welcome_ruler }}
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Contents:
+
+  ref/saltext.{{ project_package }}.rst
+{%- for loader_package in loader_packages %}
+  ref/saltext.{{ project_package }}.{{ loader_package }}.rst
+{%- endfor %}
+  ref/modules.rst
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

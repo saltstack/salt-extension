@@ -1,0 +1,73 @@
+[metadata]
+name = salt-ext-{{ project_name }}
+description = {{ summary }}
+long_description = file: README.md
+long_description_content_type = text/markdown
+author = {{ author }}
+author_email = {{ author_email }}
+keywords = salt-extension
+url = {{ url }}
+{%- if source_url or tracker_url or docs_url %}
+project_urls =
+    {%- if source_url %}
+    Source={{ source_url }}
+    {%- endif %}
+    {%- if tracker_url %}
+    Tracker={{ tracker_url }}
+    {%- endif %}
+    {%- if docs_url %}
+    Documentation={{ docs_url }}
+    {%- endif %}
+{%- endif %}
+license = {{ license_name }}
+classifiers =
+    Programming Language :: Python
+    Programming Language :: Cython
+    Programming Language :: Python :: 3
+    Programming Language :: Python :: 3 :: Only
+    Programming Language :: Python :: 3.5
+    Programming Language :: Python :: 3.6
+    Programming Language :: Python :: 3.7
+    Programming Language :: Python :: 3.8
+    Programming Language :: Python :: 3.9
+    Development Status :: 4 - Beta
+    Intended Audience :: Developers
+    {{ license_classifier }}
+platforms = any
+
+[options]
+zip_safe = False
+include_package_data = True
+package_dir =
+    =src
+packages = find_namespace:
+python_requires = >= 3.5
+setup_requires =
+  wheel
+  setuptools>=50.3.2
+  setuptools_scm[toml]>=3.4
+  setuptools-declarative-requirements
+
+[options.packages.find]
+where = src
+exclude =
+    tests
+
+[options.entry_points]
+salt.loader=
+{%- for loader_name in loaders %}
+  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
+{%- endfor %}
+
+[requirements-files]
+install_requires = requirements/base.txt
+extras_require =
+  tests = requirements/tests.in
+
+[bdist_wheel]
+# Use this option if your package is pure-python
+universal = 1
+
+[build_sphinx]
+source_dir = docs
+build_dir = build/sphinx
