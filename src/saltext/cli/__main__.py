@@ -163,9 +163,9 @@ def main(
             fg="bright_yellow",
         )
     elif license:
-        license_name: str = LICENSES[license]
-        license_classifier: str = license_name.split(" :: ")[-1]
-        templating_context["license"] = license_name
+        license_classifier: str = LICENSES[license]
+        license_name: str = license_classifier.split(" :: ")[-1]
+        templating_context["license_name"] = license_name
         templating_context["license_classifier"] = license_classifier
 
     templating_context["loaders"] = loader
