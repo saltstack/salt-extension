@@ -46,16 +46,19 @@ def get_{{ loader }}_dirs():
     """
     Return a list of paths from where salt should load {{ loader.rstrip("s") }} modules
     """
-    return [str(PACKAGE_ROOT / {{ loader.rstrip("s") + "s" }})]
+    return [str(PACKAGE_ROOT / "{{ loader.rstrip("s") + "s" }}")]
 
 {% endfor %}
 '''
 
-LOADER_TEMPLATE = """\
+LOADER_TEMPLATE = '''\
 {%- set loader_name = loader.rstrip("s") %}
 {%- if loader_name == "module" %}
     {%- set loader_name = "execution" %}
 {%- endif %}
+"""
+Salt {{ loader_name }} module
+"""
 import logging
 
 log = logging.getLogger(__name__)
@@ -67,7 +70,7 @@ def __virtual__():
     # To force a module not to load return something like:
     #   return (False, "The {{ project_name }} {{ loader_name }} module is not implemented yet")
     return __virtualname__
-"""
+'''
 
 LOADER_TEST_TEMPLATE = """\
 import pytest
