@@ -25,7 +25,7 @@ repos:
       - id: pyupgrade
         name: Rewrite Code to be Py3.5+
         args: [--py3-plus]
-        exclude: src/saltext/{{ project_package }}/version.py
+        exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v2.3.5
@@ -34,7 +34,7 @@ repos:
         args: [
           --py3-plus,
         ]
-        exclude: src/saltext/{{ project_package }}/version.py
+        exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/psf/black
     rev: 20.8b1
@@ -42,7 +42,7 @@ repos:
       - id: black
         args: [-l 100]
         language_version: python3.6
-        exclude: src/saltext/{{ project_package }}/version.py
+        exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/blacken-docs
     rev: v1.7.0
