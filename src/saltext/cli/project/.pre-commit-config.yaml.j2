@@ -15,24 +15,24 @@ repos:
 
   # ----- Formatting ---------------------------------------------------------------------------->
   - repo: https://github.com/saltstack/pre-commit-remove-import-headers
-    rev: 1.0.0
+    rev: 1.1.0
     hooks:
       - id: remove-import-headers
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.7.2
+    rev: v2.10.0
     hooks:
       - id: pyupgrade
-        name: Rewrite Code to be Py3.5+
-        args: [--py3-plus]
+        name: Rewrite Code to be Py3.6+
+        args: [--py36-plus]
         exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.3.5
+    rev: v2.4.0
     hooks:
       - id: reorder-python-imports
         args: [
-          --py3-plus,
+          --py36-plus,
         ]
         exclude: src/saltext/{{ package_name }}/version.py
 
@@ -41,7 +41,6 @@ repos:
     hooks:
       - id: black
         args: [-l 100]
-        language_version: python3.6
         exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/blacken-docs
@@ -51,7 +50,34 @@ repos:
         args: [--skip-errors]
         files: ^docs/.*\.rst
         additional_dependencies: [black==20.8b1]
+
+  - repo: https://github.com/myint/rstcheck
+    rev: 3f92957
+    hooks:
+      - id: rstcheck
+        name: Check reST files using rstcheck
+        args: [--report=warning]
+        additional_dependencies: [sphinx]
   # <---- Formatting -----------------------------------------------------------------------------
+
+  # ----- Security ------------------------------------------------------------------------------>
+  - repo: https://github.com/PyCQA/bandit
+    rev: "1.7.0"
+    hooks:
+      - id: bandit
+        alias: bandit-salt
+        name: Run bandit against the code base
+        args: [--silent, -lll, --skip, B701]
+        exclude: src/saltext/{{ package_name }}/version.py
+  - repo: https://github.com/PyCQA/bandit
+    rev: "1.7.0"
+    hooks:
+      - id: bandit
+        alias: bandit-tests
+        name: Run bandit against the test suite
+        args: [--silent, -lll, --skip, B701]
+        files: ^tests/.*
+  # <---- Security -------------------------------------------------------------------------------
 
   # ----- Code Analysis ------------------------------------------------------------------------->
   - repo: https://github.com/saltstack/mirrors-nox
@@ -81,21 +107,7 @@ repos:
 
   # ----- Static Test Requirements -------------------------------------------------------------->
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
-      - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Test Requirements
-        files: ^requirements/tests.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/tests.in
-
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
+    rev: dff9089c1003af49665064067ff63c75b9b69dcd
     hooks:
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
@@ -108,9 +120,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.7-test-requirements
         name: Py3.7 Test Requirements
@@ -122,9 +131,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.8-test-requirements
         name: Py3.8 Test Requirements
@@ -136,9 +142,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.9-test-requirements
         name: Py3.9 Test Requirements
@@ -152,23 +155,6 @@ repos:
   # <---- Static Test Requirements ---------------------------------------------------------------
 
   # ----- Static Lint Requirements -------------------------------------------------------------->
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
-      - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Lint Requirements
-        files: ^requirements/lint.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/lint.in
-
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
         name: Py3.6 Lint Requirements
@@ -180,9 +166,6 @@ repos:
           - --platform=linux
           - requirements/lint.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.7-test-requirements
         name: Py3.7 Lint Requirements
@@ -194,9 +177,6 @@ repos:
           - --platform=linux
           - requirements/lint.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.8-test-requirements
         name: Py3.8 Lint Requirements
@@ -208,9 +188,6 @@ repos:
           - --platform=linux
           - requirements/lint.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.9-test-requirements
         name: Py3.9 Lint Requirements
@@ -224,23 +201,6 @@ repos:
   # <---- Static Lint Requirements ---------------------------------------------------------------
 
   # ----- Static Docs Requirements -------------------------------------------------------------->
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
-      - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Docs Requirements
-        files: ^requirements/docs.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/docs.in
-
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
         name: Py3.6 Docs Requirements
@@ -252,9 +212,6 @@ repos:
           - --platform=linux
           - requirements/docs.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.7-test-requirements
         name: Py3.7 Docs Requirements
@@ -266,9 +223,6 @@ repos:
           - --platform=linux
           - requirements/docs.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.8-test-requirements
         name: Py3.8 Docs Requirements
@@ -280,9 +234,6 @@ repos:
           - --platform=linux
           - requirements/docs.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.9-test-requirements
         name: Py3.9 Docs Requirements

@@ -67,7 +67,7 @@ repos:
 # ----- Static Requirements --------------------------------------------------------------------->
   # ----- Testing Static Requirements ----------------------------------------------------------->
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
+    rev: dff9089c1003af49665064067ff63c75b9b69dcd
     hooks:
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
@@ -80,9 +80,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.7-test-requirements
         name: Py3.7 Test Requirements
@@ -94,9 +91,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.8-test-requirements
         name: Py3.8 Test Requirements
@@ -108,9 +102,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.9-test-requirements
         name: Py3.9 Test Requirements
@@ -122,9 +113,6 @@ repos:
           - --platform=linux
           - requirements/tests.in
 
-  - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: master
-    hooks:
       - id: pip-tools-compile
         alias: compile-3.10-test-requirements
         name: Py3.10 Test Requirements

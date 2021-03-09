@@ -1,1 +1,2 @@
-pytest-salt-factories >= 0.95.0
+pytest >= 6.1.0
+pytest-salt-factories >= 0.121.1
