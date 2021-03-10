@@ -79,7 +79,8 @@ def _install_requirements(
     *passed_requirements,
     install_coverage_requirements=True,
     install_test_requirements=True,
-    install_source=False
+    install_source=False,
+    install_salt=True,
 ):
     if SKIP_REQUIREMENTS_INSTALL is False:
         # Always have the wheel package installed
@@ -87,6 +88,11 @@ def _install_requirements(
         if install_coverage_requirements:
             session.install(
                 "--progress-bar=off", COVERAGE_VERSION_REQUIREMENT, silent=PIP_INSTALL_SILENT
+            )
+
+        if install_salt:
+            session.install(
+                "--progress-bar=off", SALT_REQUIREMENT, silent=PIP_INSTALL_SILENT
             )
 
         if install_test_requirements:
@@ -147,7 +153,7 @@ def tests(session):
         "--log-file={}".format(RUNTESTS_LOGFILE.relative_to(REPO_ROOT)),
         "--log-file-level=debug",
         "--show-capture=no",
-        "--junitxml={}".format(JUNIT_REPORT.relative_to(REPO_ROOT)),
+        "--junitxml={}".format(JUNIT_REPORT),
         "--showlocals",
         "-ra",
         "-s",
