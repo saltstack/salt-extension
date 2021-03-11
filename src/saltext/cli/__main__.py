@@ -12,10 +12,14 @@ from click_params import SLUG
 from jinja2 import Template
 from saltext.cli import __version__
 from saltext.cli import PACKAGE_ROOT
+from saltext.cli.templates import LOADER_MODULE_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_STATE_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_TEST_TEMPLATE
 from saltext.cli.templates import LOADERS_TEMPLATE
+from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
+from saltext.cli.templates import STATE_LOADER_TEMPLATE
 
 LICENSES: Dict[str, str] = {
     "apache": "License :: OSI Approved :: Apache Software License",
@@ -149,6 +153,9 @@ def main(
             "tracker_url": tracker_url,
         }
     )
+    if docs_url:
+        templating_context["docs_url"] = docs_url
+
     if license == "other":
         click.secho(
             "You can choose your license at https://choosealicense.com and then match "
@@ -217,7 +224,13 @@ def main(
         loader_dir_init = loader_dir / "__init__.py"
         if not loader_dir_init.exists():
             loader_dir_init.write_text("")
-        loader_module_contents = Template(LOADER_TEMPLATE).render(**templating_context)
+        if loader_name == "module":
+            loader_template = MODULE_LOADER_TEMPLATE
+        elif loader_name == "states":
+            loader_template = STATE_LOADER_TEMPLATE
+        else:
+            loader_template = LOADER_TEMPLATE
+        loader_module_contents = Template(loader_template).render(**templating_context)
         loader_dir_module = loader_dir / f"{package_name}_mod.py"
         if loader_dir_module.exists() and force_overwrite is False:
             loader_dir_module = loader_dir_module.with_suffix(".new")
@@ -228,7 +241,13 @@ def main(
         loader_unit_tests_dir_init = loader_unit_tests_dir / "__init__.py"
         if not loader_unit_tests_dir_init.exists():
             loader_unit_tests_dir_init.write_text("")
-        loader_unit_test_contents = Template(LOADER_TEST_TEMPLATE).render(**templating_context)
+        if loader_name == "module":
+            loader_test_template = LOADER_MODULE_TEST_TEMPLATE
+        elif loader_name == "states":
+            loader_test_template = LOADER_STATE_TEST_TEMPLATE
+        else:
+            loader_test_template = LOADER_TEST_TEMPLATE
+        loader_unit_test_contents = Template(loader_test_template).render(**templating_context)
         loader_unit_test_module = loader_unit_tests_dir / f"test_{package_name}.py"
         if loader_unit_test_module.exists() and not force_overwrite:
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
@@ -239,7 +258,7 @@ def main(
         f"If the {project_name} extension should only target salt 3003 or "
         "newer, run the following command:"
     )
-    click.secho(f"  * rm src/saltext/{package_name}/loader.py")
+    click.secho(f"  rm src/saltext/{package_name}/loader.py")
     click.secho("You should now run the following commands:")
     click.secho("  pip install pre-commit nox")
     click.secho("  git init .")
