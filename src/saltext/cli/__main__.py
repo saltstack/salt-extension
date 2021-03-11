@@ -199,15 +199,15 @@ def main(
         contents = src.read_text()
         if src.name.endswith(".j2"):
             contents = Template(contents).render(**templating_context)
-        dst.write_text(contents)
+        dst.write_text(contents.rstrip() + "\n")
 
     loaders_package_path = destdir / "src" / "saltext" / package_name
     loaders_package_path.mkdir(0o755, parents=True)
     loaders_package_path.joinpath("__init__.py").write_text(
-        Template(PACKAGE_INIT).render(**templating_context)
+        Template(PACKAGE_INIT).render(**templating_context).rstrip() + "\n"
     )
     loaders_package_path.joinpath("loader.py").write_text(
-        Template(LOADERS_TEMPLATE).render(**templating_context)
+        Template(LOADERS_TEMPLATE).render(**templating_context).rstrip() + "\n"
     )
     loaders_unit_tests_path = destdir / "tests" / "unit"
     for loader_name in loader:
@@ -221,7 +221,7 @@ def main(
         loader_dir_module = loader_dir / f"{package_name}_mod.py"
         if loader_dir_module.exists() and force_overwrite is False:
             loader_dir_module = loader_dir_module.with_suffix(".new")
-        loader_dir_module.write_text(loader_module_contents)
+        loader_dir_module.write_text(loader_module_contents.rstrip() + "\n")
 
         loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
         loader_unit_tests_dir.mkdir(0o755, exist_ok=True)
@@ -232,9 +232,24 @@ def main(
         loader_unit_test_module = loader_unit_tests_dir / f"test_{package_name}.py"
         if loader_unit_test_module.exists() and not force_overwrite:
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
-        loader_unit_test_module.write_text(loader_unit_test_contents)
+        loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
 
-    click.secho("Bare ones project is created. Start Hacking!", fg="bright_green", bold=True)
+    click.secho("Bare ones project is created.", fg="bright_green", bold=True)
+    click.secho(
+        f"If the {project_name} extension should only target salt 3003 or "
+        "newer, run the following command:"
+    )
+    click.secho(f"  * rm src/saltext/{package_name}/loader.py")
+    click.secho("You should now run the following commands:")
+    click.secho("  * pip install pre-commit nox")
+    click.secho("  * git init .")
+    click.secho("  * git add .")
+    click.secho("  * pre-commit install")
+    click.secho("  * git commit -a")
+    click.secho("The above command will fail because it's pinning the project dependencies.")
+    click.secho("Now run the following command:")
+    click.secho("  * git commit -a -m 'Initial extension layout'")
+    click.secho("Start Hacking!", fg="bright_green", bold=True)
 
 
 if __name__ == "__main__":
