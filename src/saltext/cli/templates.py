@@ -134,7 +134,7 @@ def exampled(name):
     return ret
 '''
 
-LOADER_MODULE_TEST_TEMPLATE = """\
+LOADER_MODULE_UNIT_TEST_TEMPLATE = """\
 import pytest
 import salt.modules.test as testmod
 import saltext.{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_module
@@ -155,7 +155,7 @@ def test_replace_this_this_with_something_meaningful():
     assert {{ package_name }}_module.example_function(echo_str) == echo_str
 """
 
-LOADER_STATE_TEST_TEMPLATE = """\
+LOADER_STATE_UNIT_TEST_TEMPLATE = """\
 import pytest
 import salt.modules.test as testmod
 import saltext.{{ package_name }}.modules.{{ package_name }}_mod as {{ package_name }}_module
@@ -189,7 +189,7 @@ def test_replace_this_this_with_something_meaningful():
     assert {{ package_name }}_state.exampled(echo_str) == expected
 """
 
-LOADER_TEST_TEMPLATE = """\
+LOADER_UNIT_TEST_TEMPLATE = """\
 {%- set loader_name = loader.rstrip("s") %}
 import pytest
 import saltext.{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
@@ -208,4 +208,20 @@ def configure_loader_modules():
 def test_replace_this_this_with_something_meaningful():
     assert "this_does_not_exist.please_replace_it" in {{ package_name }}_{{ loader_name }}.__salt__
     assert {{ package_name }}_{{ loader_name }}.__salt__["this_does_not_exist.please_replace_it"]() is True
+"""
+
+LOADER_MODULE_INTEGRATION_TEST_TEMPLATE = """\
+import pytest
+
+pytestmark = [
+    pytest.mark.require_salt_modules("{{ package_name }}.example_function"),
+]
+
+
+def test_replace_this_this_with_something_meaningful(salt_call_cli):
+    echo_str = "Echoed!"
+    ret = salt_call_cli.run("{{ package_name}}.example_function", echo_str)
+    assert ret.exitcode == 0
+    assert ret.json
+    assert ret.json == echo_str
 """

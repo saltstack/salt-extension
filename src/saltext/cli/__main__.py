@@ -12,10 +12,11 @@ from click_params import SLUG
 from jinja2 import Template
 from saltext.cli import __version__
 from saltext.cli import PACKAGE_ROOT
-from saltext.cli.templates import LOADER_MODULE_TEST_TEMPLATE
-from saltext.cli.templates import LOADER_STATE_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_MODULE_UNIT_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
-from saltext.cli.templates import LOADER_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADERS_TEMPLATE
 from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
@@ -217,6 +218,7 @@ def main(
         Template(LOADERS_TEMPLATE).render(**templating_context).rstrip() + "\n"
     )
     loaders_unit_tests_path = destdir / "tests" / "unit"
+    loaders_integration_tests_path = destdir / "tests" / "integration"
     for loader_name in loader:
         templating_context["loader"] = loader_name
         loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
@@ -242,16 +244,34 @@ def main(
         if not loader_unit_tests_dir_init.exists():
             loader_unit_tests_dir_init.write_text("")
         if loader_name == "module":
-            loader_test_template = LOADER_MODULE_TEST_TEMPLATE
+            loader_test_template = LOADER_MODULE_UNIT_TEST_TEMPLATE
         elif loader_name == "states":
-            loader_test_template = LOADER_STATE_TEST_TEMPLATE
+            loader_test_template = LOADER_STATE_UNIT_TEST_TEMPLATE
         else:
-            loader_test_template = LOADER_TEST_TEMPLATE
+            loader_test_template = LOADER_UNIT_TEST_TEMPLATE
         loader_unit_test_contents = Template(loader_test_template).render(**templating_context)
         loader_unit_test_module = loader_unit_tests_dir / f"test_{package_name}.py"
         if loader_unit_test_module.exists() and not force_overwrite:
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
         loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
+
+        loader_integration_tests_dir = loaders_integration_tests_path / (
+            loader_name.rstrip("s") + "s"
+        )
+        loader_integration_tests_dir.mkdir(0o755, exist_ok=True)
+        loader_integration_tests_dir_init = loader_integration_tests_dir / "__init__.py"
+        if not loader_integration_tests_dir_init.exists():
+            loader_integration_tests_dir_init.write_text("")
+        if loader_name != "module":
+            continue
+        loader_test_template = LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
+        loader_integration_test_contents = Template(loader_test_template).render(
+            **templating_context
+        )
+        loader_integration_test_module = loader_integration_tests_dir / f"test_{package_name}.py"
+        if loader_integration_test_module.exists() and not force_overwrite:
+            loader_integration_test_module = loader_integration_test_module.with_suffix(".new")
+        loader_integration_test_module.write_text(loader_integration_test_contents.rstrip() + "\n")
 
     click.secho("Bare ones project is created.", fg="bright_green", bold=True)
     click.secho(

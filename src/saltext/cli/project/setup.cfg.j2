@@ -60,6 +60,7 @@ salt.loader=
 # To support Salt versions before 3003, remove the 'options.entry_points' section above and
 # un-comment the section below
 # [options.entry_points]
+# salt.loader=
 {%- for loader_name in loaders %}
   # {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
 {%- endfor %}
