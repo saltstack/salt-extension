@@ -55,15 +55,15 @@ exclude =
 
 [options.entry_points]
 salt.loader=
-  saltext.{{ project_name }} = saltext.{{ package_name }}
+{%- for loader_name in loaders %}
+  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
+{%- endfor %}
 
-# To support Salt versions before 3003, remove the 'options.entry_points' section above and
-# un-comment the section below
+# When targetting Salt >= 3003, you can remove the 'options.entry_points' section above and
+# un-comment the section below.
 # [options.entry_points]
 # salt.loader=
-{%- for loader_name in loaders %}
-  # {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
-{%- endfor %}
+#   saltext.{{ project_name }} = saltext.{{ package_name }}
 
 [requirements-files]
 install_requires = requirements/base.txt
