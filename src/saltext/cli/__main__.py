@@ -183,6 +183,9 @@ def main(
 
     project_template_path = PACKAGE_ROOT / "project"
     for src in sorted(project_template_path.rglob("*")):
+        if "__pycache__" in src.parts:
+            # We're not interested in python pyc cache files
+            continue
         dst_parts = []
         templating_context["loader"] = loader
         for part in src.relative_to(project_template_path).parts:
