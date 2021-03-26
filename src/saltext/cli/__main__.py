@@ -279,7 +279,8 @@ def main(
     click.secho("Bare bones project is created.", fg="bright_green", bold=True)
     click.secho(
         f"If the {project_name} extension should only target salt 3003 or "
-        "newer, run the following command:"
+        "newer, edit 'setup.cfg', read the comment around 'options.entry-points', "
+        "and then run the following command:"
     )
     click.secho(f"  rm src/saltext/{package_name}/loader.py")
     click.secho("You should now run the following commands:")
