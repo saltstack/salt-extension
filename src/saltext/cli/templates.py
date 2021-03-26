@@ -214,7 +214,7 @@ LOADER_MODULE_INTEGRATION_TEST_TEMPLATE = """\
 import pytest
 
 pytestmark = [
-    pytest.mark.require_salt_modules("{{ package_name }}.example_function"),
+    pytest.mark.requires_salt_modules("{{ package_name }}.example_function"),
 ]
 
 
