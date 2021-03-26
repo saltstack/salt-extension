@@ -276,7 +276,7 @@ def main(
             loader_integration_test_module = loader_integration_test_module.with_suffix(".new")
         loader_integration_test_module.write_text(loader_integration_test_contents.rstrip() + "\n")
 
-    click.secho("Bare ones project is created.", fg="bright_green", bold=True)
+    click.secho("Bare bones project is created.", fg="bright_green", bold=True)
     click.secho(
         f"If the {project_name} extension should only target salt 3003 or "
         "newer, run the following command:"
