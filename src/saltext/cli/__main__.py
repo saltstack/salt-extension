@@ -291,7 +291,7 @@ def main(
     click.secho("The above command will fail because it's pinning the project dependencies.")
     click.secho("Now run the following commands:")
     click.secho("  nox -e gen-api-docs")
-    click.secho("  git add docs/ret")
+    click.secho("  git add docs/ref")
     click.secho("  git commit -a -m 'Initial extension layout'")
     click.secho("To run the included test suite, run the following command:")
     click.secho("  nox -e tests-3 -- tests/")
