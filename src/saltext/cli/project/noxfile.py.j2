@@ -240,7 +240,13 @@ class Tee:
 
 
 def _lint(session, rcfile, flags, paths, tee_output=True):
-    _install_requirements(session, install_salt=False, install_coverage_requirements=False,  install_test_requirements=False, install_extras=["dev", "tests"])
+    _install_requirements(
+        session,
+        install_salt=False,
+        install_coverage_requirements=False,
+        install_test_requirements=False,
+        install_extras=["dev", "tests"],
+    )
 
     if tee_output:
         session.run("pylint", "--version")
