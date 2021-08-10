@@ -7,6 +7,8 @@ import shutil
 import sys
 import tempfile
 
+from pathlib import Path
+
 import nox
 from nox.command import CommandFailed
 from nox.virtualenv import VirtualEnv
@@ -412,9 +414,14 @@ def docs(session):
 
 @nox.session(name="docs-html", python="3")
 @nox.parametrize("clean", [False, True])
-def docs_html(session, clean):
+@nox.parametrize("include_api_docs", [False, True])
+def docs_html(session, clean, include_api_docs):
     """
     Build Sphinx HTML Documentation
+
+    TODO: Add option for `make linkcheck` and `make coverage`
+          calls via Sphinx. Ran into problems with two when
+          using Furo theme and latest Sphinx.
     """
     _install_requirements(
         session,
@@ -423,6 +430,8 @@ def docs_html(session, clean):
         install_source=True,
         install_extras=["docs"],
     )
+    if include_api_docs:
+        gen_api_docs(session)
     build_dir = Path("docs", "_build", "html")
     sphinxopts = "-Wn"
     if clean:
