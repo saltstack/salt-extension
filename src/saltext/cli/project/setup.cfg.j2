@@ -79,11 +79,13 @@ salt.loader=
     SaltPyLint
   docs =
     sphinx
-    sphinx-material-saltstack
+    furo
+    sphinx-copybutton
     sphinx-prompt
     sphinxcontrib-spelling
     importlib_metadata; python_version < "3.8"
-
+  docsauto =
+    sphinx-autobuild
 
 [bdist_wheel]
 # Use this option if your package is pure-python
