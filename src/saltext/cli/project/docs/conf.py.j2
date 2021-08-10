@@ -38,10 +38,10 @@ dist = distribution("saltext.{{ project_name }}")
 
 # -- Project information -----------------------------------------------------
 this_year = datetime.datetime.today().year
-if this_year == 2020:
-    copyright_year = 2020
+if this_year == 2021:
+    copyright_year = 2021
 else:
-    copyright_year = "2020 - {}".format(this_year)
+    copyright_year = "2021 - {}".format(this_year)
 project = dist.metadata["Summary"]
 author = dist.metadata["Author"]
 copyright = "{}, {}".format(copyright_year, author)
@@ -74,7 +74,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    "sphinx-copybutton",
+    "sphinx_copybutton",
     "sphinxcontrib.spelling",
 ]
 

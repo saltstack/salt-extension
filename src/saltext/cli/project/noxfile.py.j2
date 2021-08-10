@@ -410,6 +410,53 @@ def docs(session):
     os.chdir(str(REPO_ROOT))
 
 
+@nox.session(name="docs-html", python="3")
+@nox.parametrize("clean", [False, True])
+def docs_html(session, clean):
+    """
+    Build Sphinx HTML Documentation
+    """
+    _install_requirements(
+        session,
+        install_coverage_requirements=False,
+        install_test_requirements=False,
+        install_source=True,
+        install_extras=["docs"],
+    )
+    build_dir = Path("docs", "_build", "html")
+    sphinxopts = "-Wn"
+    if clean:
+        sphinxopts += "E"
+    args = [sphinxopts, "--keep-going", "docs", str(build_dir)]
+    session.run("sphinx-build", *args, external=True)
+
+
+@nox.session(name="docs-dev", python="3")
+@nox.parametrize("clean", [False, True])
+def docs_dev(session, clean) -> None:
+    """
+    Build and serve the Sphinx HTML documentation, with live reloading on file changes, via sphinx-autobuild.
+
+    Note: Only use this in INTERACTIVE DEVELOPMENT MODE. This SHOULD NOT be called
+        in CI/CD pipelines, as it will hang.
+    """
+    _install_requirements(
+        session,
+        install_coverage_requirements=False,
+        install_test_requirements=False,
+        install_source=True,
+        install_extras=["docs", "docsauto"],
+    )
+
+    # Launching LIVE reloading Sphinx session
+    build_dir = Path("docs", "_build", "html")
+    args = ["--watch", ".", "--open-browser", "docs", str(build_dir)]
+    if clean and build_dir.exists():
+        shutil.rmtree(build_dir)
+
+    session.run("sphinx-autobuild", *args)
+
+
 @nox.session(name="docs-crosslink-info", python="3")
 def docs_crosslink_info(session):
     """
