@@ -47,28 +47,43 @@ setup_requires =
   setuptools>=50.3.2
   setuptools_scm[toml]>=3.4
   setuptools-declarative-requirements
+install_requires =
+  salt>=3003
+  # Add other module install requirements above this line
 
 [options.packages.find]
 where = src
 exclude =
     tests
 
+# When targetting Salt < 3003, you can remove the other 'options.entry_points' section and use this one
+#[options.entry_points]
+#salt.loader=
+#{%- for loader_name in loaders %}
+#  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
+#{%- endfor %}
+
 [options.entry_points]
 salt.loader=
-{%- for loader_name in loaders %}
-  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
-{%- endfor %}
+  saltext.{{ project_name }} = saltext.{{ package_name }}
 
-# When targetting Salt >= 3003, you can remove the 'options.entry_points' section above and
-# un-comment the section below.
-# [options.entry_points]
-# salt.loader=
-#   saltext.{{ project_name }} = saltext.{{ package_name }}
 
-[requirements-files]
-install_requires = requirements/base.txt
-extras_require =
-  tests = requirements/tests.in
+[options.extras_require]
+  tests =
+    pytest==6.2.4
+    pytest-salt-factories==0.906.0
+  dev =
+    nox==2021.6.12
+    pre-commit==2.13.0
+    pylint
+    SaltPyLint
+  docs =
+    sphinx
+    sphinx-material-saltstack
+    sphinx-prompt
+    sphinxcontrib-spelling
+    importlib_metadata; python_version < "3.8"
+
 
 [bdist_wheel]
 # Use this option if your package is pure-python
