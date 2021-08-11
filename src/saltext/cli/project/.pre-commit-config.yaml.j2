@@ -1,8 +1,8 @@
 ---
-minimum_pre_commit_version: 1.15.2
+minimum_pre_commit_version: 2.4.0
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.1.0
+    rev: v4.0.1
     hooks:
       - id: check-merge-conflict  # Check for files that contain merge conflict strings.
       - id: trailing-whitespace   # Trims trailing whitespace.
@@ -37,7 +37,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: 1.3.2
+    rev: 1.3.3
     hooks:
       - id: salt-rewrite
         alias: rewrite-docstrings
@@ -47,7 +47,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: 1.3.2
+    rev: 1.3.3
     hooks:
       - id: salt-rewrite
         alias: rewrite-tests
@@ -56,17 +56,17 @@ repos:
         args: [--silent, -E, fix_docstrings]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.10.0
+    rev: v2.23.3
     hooks:
       - id: pyupgrade
-        name: Rewrite Code to be Py3.5+
+        name: Rewrite Code to be Py3.6+
         args: [
-          --py3-plus
+          --py36-plus
         ]
         exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.4.0
+    rev: v2.6.0
     hooks:
       - id: reorder-python-imports
         args: [
@@ -75,7 +75,7 @@ repos:
         exclude: src/saltext/{{ package_name }}/version.py
 
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.7b0
     hooks:
       - id: black
         args: [-l 100]
@@ -87,7 +87,7 @@ repos:
       - id: blacken-docs
         args: [--skip-errors]
         files: ^(docs/.*\.rst|src/saltext/{{ package_name }}/.*\.py)$
-        additional_dependencies: [black==20.8b1]
+        additional_dependencies: [black==21.7b0]
   # <---- Formatting -----------------------------------------------------------------------------
 
   # ----- Security ------------------------------------------------------------------------------>
@@ -111,7 +111,7 @@ repos:
 
   # ----- Code Analysis ------------------------------------------------------------------------->
   - repo: https://github.com/saltstack/mirrors-nox
-    rev: v2020.8.22
+    rev: v2021.6.12
     hooks:
       - id: nox
         alias: lint-src
@@ -123,7 +123,7 @@ repos:
           - --
 
   - repo: https://github.com/saltstack/mirrors-nox
-    rev: v2020.8.22
+    rev: v2021.6.12
     hooks:
       - id: nox
         alias: lint-tests
@@ -137,19 +137,8 @@ repos:
 
   # ----- Static Test Requirements -------------------------------------------------------------->
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: dff9089c1003af49665064067ff63c75b9b69dcd
+    rev: '4.1'
     hooks:
-      - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Test Requirements
-        files: ^requirements/tests.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/tests.in
-
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
         name: Py3.6 Test Requirements
@@ -197,17 +186,6 @@ repos:
 
   # ----- Static Lint Requirements -------------------------------------------------------------->
       - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Lint Requirements
-        files: ^requirements/lint.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/lint.in
-
-      - id: pip-tools-compile
         alias: compile-3.6-test-requirements
         name: Py3.6 Lint Requirements
         files: ^requirements/lint.in$
@@ -253,17 +231,6 @@ repos:
   # <---- Static Lint Requirements ---------------------------------------------------------------
 
   # ----- Static Docs Requirements -------------------------------------------------------------->
-      - id: pip-tools-compile
-        alias: compile-3.5-test-requirements
-        name: Py3.5 Docs Requirements
-        files: ^requirements/docs.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.5
-          - --platform=linux
-          - requirements/docs.in
-
       - id: pip-tools-compile
         alias: compile-3.6-test-requirements
         name: Py3.6 Docs Requirements
