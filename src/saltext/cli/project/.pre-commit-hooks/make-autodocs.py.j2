@@ -1,33 +1,34 @@
+import subprocess
 import sys
 from enum import IntEnum
 from pathlib import Path
 
 
-class Result(IntEnum):
-    success = 0
-    fail = 1
+repo_path = Path(subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode().strip())
+src_dir = repo_path / "src" / "saltext" / "{{ project_name }}"
+doc_dir = repo_path / "docs"
+
+docs_by_kind = {}
 
 
-result = Result.fail
+def make_import_path(path):
+    return ".".join(path.with_suffix("").parts[-4:])
 
-all_states = []
-all_mods = []
-docs_path = Path("docs")
-ref_path = docs_path / "ref"
-mod_path = ref_path / "modules"
-state_path = ref_path / "states"
 
-for path in Path("src").glob("**/*.py"):
-    if path.parent.name in ("states", "modules"):
+for path in Path(__file__).parent.parent.joinpath("src/saltext/{{ project_name }}/").glob("*/*.py"):
+    if path.name != "__init__.py":
         kind = path.parent.name
-        import_path = ".".join(path.with_suffix("").parts[1:])
-        if kind == "states":
-            all_states.append(import_path)
-            rst_path = state_path / (import_path + ".rst")
-        elif kind == "modules":
-            all_mods.append(import_path)
-            rst_path = mod_path / (import_path + ".rst")
+        docs_by_kind.setdefault(kind, set()).add(path)
 
+for kind in docs_by_kind:
+    kind_path = doc_dir / "ref" / kind
+    all_rst = kind_path / "all.rst"
+    import_paths = []
+    for path in sorted(docs_by_kind[kind]):
+        import_path = make_import_path(path)
+        import_paths.append(import_path)
+        rst_path = kind_path.joinpath(import_path).with_suffix(".rst")
+        print(rst_path)
         rst_path.parent.mkdir(parents=True, exist_ok=True)
         rst_path.write_text(
             f"""
@@ -39,41 +40,18 @@ for path in Path("src").glob("**/*.py"):
 """
         )
 
-        # print(import_path)
-        # print(kind, path)
+    header_text = "execution" if kind.lower() == "modules" else kind.rstrip('s') + " modules"
+    header = f"{'_'*len(header_text)}\n{header_text.title()}\n{'_'*len(header_text)}"
 
-states_rst = state_path / "all.rst"
-states_rst.parent.mkdir(parents=True, exist_ok=True)
-mods_rst = mod_path / "all.rst"
-mods_rst.parent.mkdir(parents=True, exist_ok=True)
+    all_rst.write_text(
+        f"""
+.. all-saltext.{{ project_name }}.{kind}:
 
-
-mods_rst.write_text(
-    f"""
-.. all-saltext.vmware.modules:
-
------------------
-Execution Modules
------------------
+{header}
 
 .. autosummary::
     :toctree:
 
-{chr(10).join(sorted('    '+mod for mod in all_mods))}
+{chr(10).join(sorted('    '+p for p in import_paths))}
 """
-)
-states_rst.write_text(
-    f"""
-.. all-saltext.vmware.states:
-
--------------
-State Modules
--------------
-
-.. autosummary::
-    :toctree:
-
-{chr(10).join(sorted('    '+state for state in all_states))}
-"""
-)
-# exit(result)
+    )
