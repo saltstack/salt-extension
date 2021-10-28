@@ -20,9 +20,9 @@ def salt_factories_config():
 
 @pytest.fixture(scope="package")
 def master(salt_factories):
-    return salt_factories.get_salt_master_daemon(random_string("master-"))
+    return salt_factories.salt_master_daemon(random_string("master-"))
 
 
 @pytest.fixture(scope="package")
 def minion(master):
-    return master.get_salt_minion_daemon(random_string("minion-"))
+    return master.salt_minion_daemon(random_string("minion-"))
