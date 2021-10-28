@@ -89,7 +89,7 @@ SALT_LOADERS = (
     expose_value=True,
 )
 @click.option(
-    "-V", "--salt-version", help="The minimum Salt version to target", default="3002.6", type=str
+    "-V", "--salt-version", help="The minimum Salt version to target", default="3003", type=str
 )
 @click.option(
     "-l",
