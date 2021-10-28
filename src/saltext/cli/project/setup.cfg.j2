@@ -1,5 +1,5 @@
 [metadata]
-name = saltext.{{ project_name }}
+name = {{ package_namespace_pkg }}{{ project_name }}
 description = {{ summary }}
 long_description = file: README.md
 long_description_content_type = text/markdown
@@ -60,12 +60,12 @@ exclude =
 #[options.entry_points]
 #salt.loader=
 #{%- for loader_name in loaders %}
-#  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
+#  {{ loader_name }}_dirs = {{ package_namespace_pkg }}{{ package_name }}.loader:get_{{ loader_name }}_dirs
 #{%- endfor %}
 
 [options.entry_points]
 salt.loader=
-  saltext.{{ project_name }} = saltext.{{ package_name }}
+  {{ package_namespace_pkg }}{{ project_name }} = {{ package_namespace_pkg }}{{ package_name }}
 
 
 [options.extras_require]

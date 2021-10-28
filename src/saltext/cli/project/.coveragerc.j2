@@ -36,7 +36,7 @@ ignore_errors = True
 
 [paths]
 source =
-  saltext/{{ package_name }}
-  src/saltext/{{ package_name }}
+  {{ package_namespace_path }}{{ package_name }}
+  src/{{ package_namespace_path }}{{ package_name }}
 testsuite =
   tests/

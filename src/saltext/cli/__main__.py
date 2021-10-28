@@ -72,7 +72,14 @@ SALT_LOADERS = (
 @click.option("--source-url", help="Project Source URL", type=PUBLIC_URL)
 @click.option("--tracker-url", help="Project Tracker URL", type=PUBLIC_URL)
 @click.option("--docs-url", help="Project Documentation URL", type=PUBLIC_URL)
-@click.option("--package-name", help="Project Package name 'saltex.<package-name>'", type=str)
+@click.option("--package-name", help="Project Package name 'saltext.<package-name>'", type=str)
+@click.option(
+    "--no-saltext-namespace",
+    help="Don't use the 'saltext' package namespace",
+    is_flag=True,
+    default=False,
+    expose_value=True,
+)
 @click.option(
     "-F",
     "--force-overwrite",
@@ -122,6 +129,7 @@ def main(
     dest: str,
     salt_version: str,
     force_overwrite: bool,
+    no_saltext_namespace: bool,
 ):
     destdir: pathlib.Path = pathlib.Path(dest)
 
@@ -134,6 +142,16 @@ def main(
         "salt_version": salt_version,
         "copyright_year": datetime.datetime.today().year,
     }
+    if no_saltext_namespace is False:
+        package_namespace = "saltext"
+        package_namespace_pkg = f"{package_namespace}."
+        package_namespace_path = f"{package_namespace}/"
+        templating_context["package_namespace"] = "saltext"
+    else:
+        package_namespace = package_namespace_path = package_namespace_pkg = ""
+        templating_context["package_namespace"] = ""
+    templating_context["package_namespace_pkg"] = package_namespace_pkg
+    templating_context["package_namespace_path"] = package_namespace_path
 
     if not package_name:
         package_name = project_name.replace(" ", "_").replace("-", "_")
@@ -212,7 +230,7 @@ def main(
             contents = Template(contents).render(**templating_context)
         dst.write_text(contents.rstrip() + "\n")
 
-    loaders_package_path = destdir / "src" / "saltext" / package_name
+    loaders_package_path = destdir / "src" / package_namespace / package_name
     loaders_package_path.mkdir(0o755, parents=True)
     loaders_package_path.joinpath("__init__.py").write_text(
         Template(PACKAGE_INIT).render(**templating_context).rstrip() + "\n"
@@ -282,7 +300,7 @@ def main(
         "newer, edit 'setup.cfg', read the comment around 'options.entry-points', "
         "and then run the following command:"
     )
-    click.secho(f"  rm src/saltext/{package_name}/loader.py")
+    click.secho(f"  rm src/{package_namespace_path}{package_name}/loader.py")
     click.secho("You should now run the following commands:")
     click.secho(f"  python3 -m venv .env --prompt {project_name!r}")
     click.secho("  source .env/bin/activate")
