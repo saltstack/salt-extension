@@ -7,6 +7,7 @@ from typing import Optional
 from typing import Tuple
 
 import click
+import jinja2.exceptions
 from click_params import PUBLIC_URL
 from click_params import SLUG
 from jinja2 import Template
@@ -227,7 +228,14 @@ def main(
             dst = dst.with_suffix(".new")
         contents = src.read_text()
         if src.name.endswith(".j2"):
-            contents = Template(contents).render(**templating_context)
+            try:
+                contents = Template(contents).render(**templating_context)
+            except jinja2.exceptions.TemplateError as exc:
+                click.secho(
+                    f"Failed to render template {src}: {exc}",
+                    fg="bright_red",
+                )
+                raise
         dst.write_text(contents.rstrip() + "\n")
 
     loaders_package_path = destdir / "src" / package_namespace / package_name
