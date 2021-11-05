@@ -25,7 +25,7 @@ repos:
         name: Check CLI examples on execution modules
         entry: python .pre-commit-hooks/check-cli-examples.py
         language: system
-        files: ^src/saltext/{{ package_name }}/modules/.*\.py$
+        files: ^src/{{ package_namespace_path }}{{ package_name }}/modules/.*\.py$
 
   - repo: local
     hooks:
@@ -42,7 +42,7 @@ repos:
       - id: salt-rewrite
         alias: rewrite-docstrings
         name: Salt extensions docstrings auto-fixes
-        files: ^src/saltext/{{ package_name }}/.*\.py$
+        files: ^src/{{ package_namespace_path }}{{ package_name }}/.*\.py$
         args: [--silent]
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
@@ -63,7 +63,7 @@ repos:
         args: [
           --py36-plus
         ]
-        exclude: src/saltext/{{ package_name }}/version.py
+        exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v2.6.0
@@ -72,21 +72,21 @@ repos:
         args: [
           --py3-plus,
         ]
-        exclude: src/saltext/{{ package_name }}/version.py
+        exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
   - repo: https://github.com/psf/black
     rev: 21.7b0
     hooks:
       - id: black
         args: [-l 100]
-        exclude: src/saltext/{{ package_name }}/version.py
+        exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/blacken-docs
     rev: v1.10.0
     hooks:
       - id: blacken-docs
         args: [--skip-errors]
-        files: ^(docs/.*\.rst|src/saltext/{{ package_name }}/.*\.py)$
+        files: ^(docs/.*\.rst|src/{{ package_namespace_path }}{{ package_name }}/.*\.py)$
         additional_dependencies: [black==21.7b0]
   # <---- Formatting -----------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ repos:
         alias: bandit-salt
         name: Run bandit against the code base
         args: [--silent, -lll, --skip, B701]
-        exclude: src/saltext/{{ package_name }}/version.py
+        exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
   - repo: https://github.com/PyCQA/bandit
     rev: "1.7.0"
     hooks:

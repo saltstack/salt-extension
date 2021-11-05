@@ -137,7 +137,7 @@ def exampled(name):
 LOADER_MODULE_UNIT_TEST_TEMPLATE = """\
 import pytest
 import salt.modules.test as testmod
-import saltext.{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_module
+import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_module
 
 
 @pytest.fixture
@@ -158,8 +158,8 @@ def test_replace_this_this_with_something_meaningful():
 LOADER_STATE_UNIT_TEST_TEMPLATE = """\
 import pytest
 import salt.modules.test as testmod
-import saltext.{{ package_name }}.modules.{{ package_name }}_mod as {{ package_name }}_module
-import saltext.{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_state
+import {{ package_namespace_pkg }}{{ package_name }}.modules.{{ package_name }}_mod as {{ package_name }}_module
+import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_state
 
 
 @pytest.fixture
@@ -192,7 +192,7 @@ def test_replace_this_this_with_something_meaningful():
 LOADER_UNIT_TEST_TEMPLATE = """\
 {%- set loader_name = loader.rstrip("s") %}
 import pytest
-import saltext.{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
+import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
 
 
 @pytest.fixture

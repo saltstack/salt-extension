@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 repo_path = Path(subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode().strip())
-src_dir = repo_path / "src" / "saltext" / "{{ project_name }}"
+src_dir = repo_path / "src" / {% if package_namespace -%}" {{ package_namespace}}" / {% endif -%} "{{ project_name }}"
 doc_dir = repo_path / "docs"
 
 docs_by_kind = {}
@@ -15,7 +15,7 @@ def make_import_path(path):
     return ".".join(path.with_suffix("").parts[-4:])
 
 
-for path in Path(__file__).parent.parent.joinpath("src/saltext/{{ project_name }}/").glob("*/*.py"):
+for path in Path(__file__).parent.parent.joinpath("src/{{ package_namespace_path }}{{ project_name }}/").glob("*/*.py"):
     if path.name != "__init__.py":
         kind = path.parent.name
         docs_by_kind.setdefault(kind, set()).add(path)
@@ -45,7 +45,7 @@ for kind in docs_by_kind:
 
     all_rst.write_text(
         f"""
-.. all-saltext.{{ project_name }}.{kind}:
+.. all-{%- if package_namespace %}{{ package_namespace}}.{%- endif %}{{ project_name }}.{kind}:
 
 {header}
 

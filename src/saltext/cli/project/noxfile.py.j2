@@ -20,7 +20,7 @@ nox.options.reuse_existing_virtualenvs = True
 nox.options.error_on_missing_interpreters = False
 
 # Python versions to test against
-PYTHON_VERSIONS = ("3", "3.5", "3.6", "3.7", "3.8", "3.9")
+PYTHON_VERSIONS = ("3", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10")
 # Be verbose when running under a CI context
 CI_RUN = (
     os.environ.get("JENKINS_URL") or os.environ.get("CI") or os.environ.get("DRONE") is not None
@@ -30,7 +30,7 @@ SKIP_REQUIREMENTS_INSTALL = "SKIP_REQUIREMENTS_INSTALL" in os.environ
 EXTRA_REQUIREMENTS_INSTALL = os.environ.get("EXTRA_REQUIREMENTS_INSTALL")
 
 COVERAGE_VERSION_REQUIREMENT = "coverage==5.2"
-SALT_REQUIREMENT = os.environ.get("SALT_REQUIREMENT") or "salt>=3003rc1"
+SALT_REQUIREMENT = os.environ.get("SALT_REQUIREMENT") or "salt>={{ salt_version }}"
 if SALT_REQUIREMENT == "salt==master":
     SALT_REQUIREMENT = "git+https://github.com/saltstack/salt.git@master"
 
@@ -196,7 +196,7 @@ def tests(session):
             "-o",
             str(COVERAGE_REPORT_PROJECT),
             "--omit=tests/*",
-            "--include=src/saltext/{{ package_name }}/*",
+            "--include=src/{{ package_namespace_path }}{{ package_name }}/*",
         )
         # Generate report for tests code coverage
         session.run(
@@ -204,16 +204,16 @@ def tests(session):
             "xml",
             "-o",
             str(COVERAGE_REPORT_TESTS),
-            "--omit=src/saltext/{{ package_name }}/*",
+            "--omit=src/{{ package_namespace_path }}{{ package_name }}/*",
             "--include=tests/*",
         )
         try:
-            session.run("coverage", "report", "--show-missing", "--include=src/saltext/{{ package_name }}/*")
+            session.run("coverage", "report", "--show-missing", "--include=src/{{ package_namespace_path }}{{ package_name }}/*")
             # If you also want to display the code coverage report on the CLI
             # for the tests, comment the call above and uncomment the line below
             # session.run(
             #    "coverage", "report", "--show-missing",
-            #    "--include=src/saltext/{{ package_name }}/*,tests/*"
+            #    "--include=src/{{ package_namespace_path }}{{ package_name }}/*,tests/*"
             # )
         finally:
             # Move the coverage DB to artifacts/coverage in order for it to be archived by CI
@@ -520,13 +520,16 @@ def gen_api_docs(session):
         install_source=True,
         install_extras=["docs"],
     )
-    shutil.rmtree("docs/ref")
+    try:
+        shutil.rmtree("docs/ref")
+    except FileNotFoundError:
+        pass
     session.run(
         "sphinx-apidoc",
         "--implicit-namespaces",
         "--module-first",
         "-o",
         "docs/ref/",
-        "src/saltext",
-        "src/saltext/{{ package_name }}/config/schemas",
+        "src/{{ package_namespace }}",
+        "src/{{ package_namespace_path }}{{ package_name }}/config/schemas",
     )

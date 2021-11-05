@@ -4,7 +4,7 @@ import re
 import sys
 
 CODE_ROOT = pathlib.Path(__file__).resolve().parent.parent
-EXECUTION_MODULES_PATH = CODE_ROOT / "src" / "saltext" / "{{ package_name }}" / "modules"
+EXECUTION_MODULES_PATH = CODE_ROOT / "src" / {% if package_namespace -%} "{{ package_namespace}}" / {% endif -%}" {{ package_name }}" / "modules"
 
 
 def check_cli_examples(files):

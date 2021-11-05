@@ -1,5 +1,5 @@
 [metadata]
-name = saltext.{{ project_name }}
+name = {{ package_namespace_pkg }}{{ project_name }}
 description = {{ summary }}
 long_description = file: README.md
 long_description_content_type = text/markdown
@@ -48,7 +48,7 @@ setup_requires =
   setuptools_scm[toml]>=3.4
   setuptools-declarative-requirements
 install_requires =
-  salt>=3003
+  salt>={{ salt_version }}
   # Add other module install requirements above this line
 
 [options.packages.find]
@@ -60,32 +60,32 @@ exclude =
 #[options.entry_points]
 #salt.loader=
 #{%- for loader_name in loaders %}
-#  {{ loader_name }}_dirs = saltext.{{ package_name }}.loader:get_{{ loader_name }}_dirs
+#  {{ loader_name }}_dirs = {{ package_namespace_pkg }}{{ package_name }}.loader:get_{{ loader_name }}_dirs
 #{%- endfor %}
 
 [options.entry_points]
 salt.loader=
-  saltext.{{ project_name }} = saltext.{{ package_name }}
+  {{ package_namespace_pkg }}{{ project_name }} = {{ package_namespace_pkg }}{{ package_name }}
 
 
 [options.extras_require]
-  tests =
-    pytest==6.2.4
-    pytest-salt-factories==0.906.0
-  dev =
-    nox==2021.6.12
-    pre-commit==2.13.0
-    pylint
-    SaltPyLint
-  docs =
-    sphinx
-    furo
-    sphinx-copybutton
-    sphinx-prompt
-    sphinxcontrib-spelling
-    importlib_metadata; python_version < "3.8"
-  docsauto =
-    sphinx-autobuild
+tests =
+  pytest==6.2.4
+  pytest-salt-factories==0.911.0
+dev =
+  nox
+  pre-commit==2.13.0
+  pylint
+  SaltPyLint
+docs =
+  sphinx
+  furo
+  sphinx-copybutton
+  sphinx-prompt
+  sphinxcontrib-spelling
+  importlib_metadata; python_version < "3.8"
+docsauto =
+  sphinx-autobuild
 
 [bdist_wheel]
 # Use this option if your package is pure-python
