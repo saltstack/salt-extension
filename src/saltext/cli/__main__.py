@@ -143,14 +143,14 @@ def main(
         "salt_version": salt_version,
         "copyright_year": datetime.datetime.today().year,
     }
-    if no_saltext_namespace is False:
+    if no_saltext_namespace:
+        package_namespace = package_namespace_path = package_namespace_pkg = ""
+        templating_context["package_namespace"] = ""
+    else:
         package_namespace = "saltext"
         package_namespace_pkg = f"{package_namespace}."
         package_namespace_path = f"{package_namespace}/"
         templating_context["package_namespace"] = "saltext"
-    else:
-        package_namespace = package_namespace_path = package_namespace_pkg = ""
-        templating_context["package_namespace"] = ""
     templating_context["package_namespace_pkg"] = package_namespace_pkg
     templating_context["package_namespace_path"] = package_namespace_path
 
