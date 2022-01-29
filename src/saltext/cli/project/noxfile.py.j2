@@ -6,7 +6,6 @@ import pathlib
 import shutil
 import sys
 import tempfile
-
 from pathlib import Path
 
 import nox
@@ -78,7 +77,7 @@ def _get_pydir(session):
 
 def _install_requirements(
     session,
-    *passed_requirements,
+    *passed_requirements,  # pylint: disable=unused-argument
     install_coverage_requirements=True,
     install_test_requirements=True,
     install_source=False,
@@ -109,7 +108,7 @@ def _install_requirements(
             )
             install_command = ["--progress-bar=off"]
             install_command += [req.strip() for req in EXTRA_REQUIREMENTS_INSTALL.split()]
-            session.install(*passed_requirements, silent=PIP_INSTALL_SILENT)
+            session.install(*install_command, silent=PIP_INSTALL_SILENT)
 
         if install_source:
             pkg = "."
@@ -404,7 +403,7 @@ def docs(session):
     session.run("make", "coverage", "SPHINXOPTS=-W", external=True)
     docs_coverage_file = os.path.join("_build", "html", "python.txt")
     if os.path.exists(docs_coverage_file):
-        with open(docs_coverage_file) as rfh:
+        with open(docs_coverage_file) as rfh:  # pylint: disable=unspecified-encoding
             contents = rfh.readlines()[2:]
             if contents:
                 session.error("\n" + "".join(contents))
