@@ -22,7 +22,6 @@ from saltext.cli.templates import LOADERS_TEMPLATE
 from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
 from saltext.cli.templates import STATE_LOADER_TEMPLATE
-from saltext.cli.templates import SDB_LOADER_TEMPLATE
 
 LICENSES: Dict[str, str] = {
     "apache": "License :: OSI Approved :: Apache Software License",
@@ -251,11 +250,7 @@ def main(
     loaders_integration_tests_path = destdir / "tests" / "integration"
     for loader_name in loader:
         templating_context["loader"] = loader_name
-        loader_dir = None
-        if loader_name in ["sdb"]:
-            loader_dir = loaders_package_path / loader_name.rstrip("s")
-        else:
-            loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
+        loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
         loader_dir.mkdir(0o755)
         loader_dir_init = loader_dir / "__init__.py"
         if not loader_dir_init.exists():
@@ -264,8 +259,6 @@ def main(
             loader_template = MODULE_LOADER_TEMPLATE
         elif loader_name == "states":
             loader_template = STATE_LOADER_TEMPLATE
-        elif loader_name == "sdb":
-            loader_template = SDB_LOADER_TEMPLATE
         else:
             loader_template = LOADER_TEMPLATE
         loader_module_contents = Template(loader_template).render(**templating_context)
