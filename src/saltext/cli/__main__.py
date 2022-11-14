@@ -16,6 +16,7 @@ from saltext.cli import PACKAGE_ROOT
 from saltext.cli.templates import LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_MODULE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_SDB_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADERS_TEMPLATE
@@ -287,6 +288,8 @@ def main(
             loader_test_template = LOADER_MODULE_UNIT_TEST_TEMPLATE
         elif loader_name == "states":
             loader_test_template = LOADER_STATE_UNIT_TEST_TEMPLATE
+        elif loader_name == "sdb":
+            loader_test_template = LOADER_SDB_UNIT_TEST_TEMPLATE
         else:
             loader_test_template = LOADER_UNIT_TEST_TEMPLATE
         loader_unit_test_contents = Template(loader_test_template).render(**templating_context)
