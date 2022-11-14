@@ -137,7 +137,7 @@ def exampled(name):
 SDB_LOADER_TEMPLATE = '''\
 {%- set loader_name = loader.rstrip("s") %}
 """
-Salt {{ loader_name }} module
+Salt {{ loader_name }} SDB module
 """
 import logging
 
