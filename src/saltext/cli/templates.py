@@ -224,7 +224,7 @@ def test_replace_this_this_with_something_meaningful():
     assert {{ package_name }}_state.exampled(echo_str) == expected
 """
 
-LOADER_SDB_TEST_TEMPLATE = """\
+LOADER_SDB_UNIT_TEST_TEMPLATE = """\
 {%- set loader_name = loader.rstrip("s") %}
 import pytest
 import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
