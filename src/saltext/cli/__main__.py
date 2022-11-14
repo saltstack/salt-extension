@@ -274,7 +274,11 @@ def main(
             loader_dir_module = loader_dir_module.with_suffix(".new")
         loader_dir_module.write_text(loader_module_contents.rstrip() + "\n")
 
-        loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
+        loader_unit_tests_dir = None
+        if loader_name in ["sdb"]:
+            loader_unit_tests_dir = loaders_unit_tests_path / loader_name.rstrip("s")
+        else:
+            loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
         loader_unit_tests_dir.mkdir(0o755, exist_ok=True)
         loader_unit_tests_dir_init = loader_unit_tests_dir / "__init__.py"
         if not loader_unit_tests_dir_init.exists():
@@ -291,9 +295,13 @@ def main(
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
         loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
 
-        loader_integration_tests_dir = loaders_integration_tests_path / (
-            loader_name.rstrip("s") + "s"
-        )
+        loader_integration_tests_dir = None
+        if loader_name in ["sdb"]:
+            loader_integration_tests_dir = loaders_integration_tests_path / loader_name.rstrip("s")
+        else:
+            loader_integration_tests_dir = loaders_integration_tests_path / (
+                loader_name.rstrip("s") + "s"
+            )
         loader_integration_tests_dir.mkdir(0o755, exist_ok=True)
         loader_integration_tests_dir_init = loader_integration_tests_dir / "__init__.py"
         if not loader_integration_tests_dir_init.exists():
