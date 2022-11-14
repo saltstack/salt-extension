@@ -134,6 +134,41 @@ def exampled(name):
     return ret
 '''
 
+SDB_LOADER_TEMPLATE = '''\
+{%- set loader_name = loader.rstrip("s") %}
+"""
+Salt {{ loader_name }} SDB module
+"""
+import logging
+
+log = logging.getLogger(__name__)
+
+__virtualname__ = "{{ package_name }}"
+
+
+def __virtual__():
+    # To force a module not to load return something like:
+    #   return (False, "The {{ project_name }} {{ loader_name }} module is not implemented yet")
+
+    # Replace this with your own logic
+    if "{{package_name}}.example_function" not in __salt__:
+        return False, "The '{{package_name}}' execution module is not available"
+    return __virtualname__
+
+
+def get(key, profile=None):
+    """
+    This example function should be replaced
+
+    CLI Example:
+
+    .. code-block:: bash
+
+        salt '*' sdb.get "sdb://{{ package_name}}/foo"
+    """
+    return key
+'''
+
 LOADER_MODULE_UNIT_TEST_TEMPLATE = """\
 import pytest
 import salt.modules.test as testmod
