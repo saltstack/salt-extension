@@ -15,15 +15,15 @@ from saltext.cli import __version__
 from saltext.cli import PACKAGE_ROOT
 from saltext.cli.templates import LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_MODULE_UNIT_TEST_TEMPLATE
-from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_SDB_UNIT_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADERS_TEMPLATE
 from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
-from saltext.cli.templates import STATE_LOADER_TEMPLATE
 from saltext.cli.templates import SDB_LOADER_TEMPLATE
+from saltext.cli.templates import STATE_LOADER_TEMPLATE
 
 LICENSES: Dict[str, str] = {
     "apache": "License :: OSI Approved :: Apache Software License",
