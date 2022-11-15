@@ -24,7 +24,7 @@ repos:
       - id: remove-import-headers
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.23.3
+    rev: v2.37.2
     hooks:
       - id: pyupgrade
         name: Rewrite Code to be Py3.6+
