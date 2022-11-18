@@ -15,12 +15,14 @@ from saltext.cli import __version__
 from saltext.cli import PACKAGE_ROOT
 from saltext.cli.templates import LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_MODULE_UNIT_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_SDB_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADERS_TEMPLATE
 from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
+from saltext.cli.templates import SDB_LOADER_TEMPLATE
 from saltext.cli.templates import STATE_LOADER_TEMPLATE
 
 LICENSES: Dict[str, str] = {
@@ -250,7 +252,11 @@ def main(
     loaders_integration_tests_path = destdir / "tests" / "integration"
     for loader_name in loader:
         templating_context["loader"] = loader_name
-        loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
+        loader_dir = None
+        if loader_name in ["sdb"]:
+            loader_dir = loaders_package_path / loader_name.rstrip("s")
+        else:
+            loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
         loader_dir.mkdir(0o755)
         loader_dir_init = loader_dir / "__init__.py"
         if not loader_dir_init.exists():
@@ -259,6 +265,8 @@ def main(
             loader_template = MODULE_LOADER_TEMPLATE
         elif loader_name == "states":
             loader_template = STATE_LOADER_TEMPLATE
+        elif loader_name == "sdb":
+            loader_template = SDB_LOADER_TEMPLATE
         else:
             loader_template = LOADER_TEMPLATE
         loader_module_contents = Template(loader_template).render(**templating_context)
@@ -267,7 +275,11 @@ def main(
             loader_dir_module = loader_dir_module.with_suffix(".new")
         loader_dir_module.write_text(loader_module_contents.rstrip() + "\n")
 
-        loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
+        loader_unit_tests_dir = None
+        if loader_name in ["sdb"]:
+            loader_unit_tests_dir = loaders_unit_tests_path / loader_name.rstrip("s")
+        else:
+            loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
         loader_unit_tests_dir.mkdir(0o755, exist_ok=True)
         loader_unit_tests_dir_init = loader_unit_tests_dir / "__init__.py"
         if not loader_unit_tests_dir_init.exists():
@@ -276,6 +288,8 @@ def main(
             loader_test_template = LOADER_MODULE_UNIT_TEST_TEMPLATE
         elif loader_name == "states":
             loader_test_template = LOADER_STATE_UNIT_TEST_TEMPLATE
+        elif loader_name == "sdb":
+            loader_test_template = LOADER_SDB_UNIT_TEST_TEMPLATE
         else:
             loader_test_template = LOADER_UNIT_TEST_TEMPLATE
         loader_unit_test_contents = Template(loader_test_template).render(**templating_context)
@@ -284,9 +298,13 @@ def main(
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
         loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
 
-        loader_integration_tests_dir = loaders_integration_tests_path / (
-            loader_name.rstrip("s") + "s"
-        )
+        loader_integration_tests_dir = None
+        if loader_name in ["sdb"]:
+            loader_integration_tests_dir = loaders_integration_tests_path / loader_name.rstrip("s")
+        else:
+            loader_integration_tests_dir = loaders_integration_tests_path / (
+                loader_name.rstrip("s") + "s"
+            )
         loader_integration_tests_dir.mkdir(0o755, exist_ok=True)
         loader_integration_tests_dir_init = loader_integration_tests_dir / "__init__.py"
         if not loader_integration_tests_dir_init.exists():
