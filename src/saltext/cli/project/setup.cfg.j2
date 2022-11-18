@@ -72,13 +72,15 @@ salt.loader=
 tests =
   pytest==6.2.4
   pytest-salt-factories==0.911.0
+  jinja2<3.1
 dev =
   nox
   pre-commit==2.13.0
   pylint
   SaltPyLint
 docs =
-  sphinx
+  sphinx>=3.5.1
+  jinja2<3.1
   furo
   sphinx-copybutton
   sphinx-prompt
