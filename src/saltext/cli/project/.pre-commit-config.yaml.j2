@@ -80,6 +80,8 @@ repos:
       - id: black
         args: [-l 100]
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
+        additional_dependencies:
+          - click<8.1.0
 
   - repo: https://github.com/asottile/blacken-docs
     rev: v1.12.1
@@ -87,7 +89,9 @@ repos:
       - id: blacken-docs
         args: [--skip-errors]
         files: ^(docs/.*\.rst|src/{{ package_namespace_path }}{{ package_name }}/.*\.py)$
-        additional_dependencies: [black==22.6.0]
+        additional_dependencies:
+          - black==22.6.0
+          - click<8.1.0
   # <---- Formatting -----------------------------------------------------------------------------
 
   # ----- Security ------------------------------------------------------------------------------>
