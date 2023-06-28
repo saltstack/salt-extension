@@ -67,27 +67,15 @@ exclude =
 salt.loader=
   {{ package_namespace_pkg }}{{ project_name }} = {{ package_namespace_pkg }}{{ package_name }}
 
-
-[options.extras_require]
-tests =
-  pytest==6.2.4
-  pytest-salt-factories==0.911.0
-  jinja2<3.1
-dev =
-  nox
-  pre-commit==2.13.0
-  pylint
-  SaltPyLint
-docs =
-  sphinx>=3.5.1
-  jinja2<3.1
-  furo
-  sphinx-copybutton
-  sphinx-prompt
-  sphinxcontrib-spelling
-  importlib_metadata; python_version < "3.8"
-docsauto =
-  sphinx-autobuild
+[requirements-files]
++install_requires = requirements/base.txt
++tests_require = requirements/tests.txt
++extras_require =
++  dev = requirements/dev.txt
++  tests = requirements/tests.txt
++  docs = requirements/docs.txt
++  docsauto = requirements/docs-auto.txt
++  changelog = requirements/changelog.txt
 
 [bdist_wheel]
 # Use this option if your package is pure-python
