@@ -1,8 +1,20 @@
+import logging
 import os
 
 import pytest
 from {{ package_namespace_pkg }}{{ package_name }} import PACKAGE_ROOT
 from saltfactories.utils import random_string
+
+
+# Reset the root logger to its default level(because salt changed it)
+logging.root.setLevel(logging.WARNING)
+
+
+# This swallows all logging to stdout.
+# To show select logs, set --log-cli-level=<level>
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+    handler.close()
 
 
 @pytest.fixture(scope="session")
