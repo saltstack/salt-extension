@@ -36,6 +36,7 @@ SALT_LOADERS = (
     "cloud",
     "engines",
     "executor",
+    "fileserver",
     "grain",
     "log_handlers",
     "matchers",
@@ -67,6 +68,7 @@ SALT_LOADERS = (
 SINGULAR_MODULE_DIRS = (
     "auth",
     "cache",
+    "fileserver",
     "metaproxy",
     "netapi",
     "output",
