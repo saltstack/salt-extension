@@ -46,7 +46,7 @@ SALT_LOADERS = (
     "pillar",
     "proxy",
     "queue",
-    "render",
+    "renderer",
     "returner",
     "roster",
     "runner",
@@ -61,6 +61,22 @@ SALT_LOADERS = (
     "pkgdb",
     "pkgfiles",
     # ssh wrapper
+    "wrapper",
+)
+
+SINGULAR_MODULE_DIRS = (
+    "auth",
+    "cache",
+    "metaproxy",
+    "netapi",
+    "output",
+    "pillar",
+    "pkgdb",
+    "proxy",
+    "roster",
+    "sdb",
+    "thorium",
+    "wheel",
     "wrapper",
 )
 
@@ -253,7 +269,7 @@ def main(
     for loader_name in loader:
         templating_context["loader"] = loader_name
         loader_dir = None
-        if loader_name in ["sdb"]:
+        if loader_name in SINGULAR_MODULE_DIRS:
             loader_dir = loaders_package_path / loader_name.rstrip("s")
         else:
             loader_dir = loaders_package_path / (loader_name.rstrip("s") + "s")
@@ -276,7 +292,7 @@ def main(
         loader_dir_module.write_text(loader_module_contents.rstrip() + "\n")
 
         loader_unit_tests_dir = None
-        if loader_name in ["sdb"]:
+        if loader_name in SINGULAR_MODULE_DIRS:
             loader_unit_tests_dir = loaders_unit_tests_path / loader_name.rstrip("s")
         else:
             loader_unit_tests_dir = loaders_unit_tests_path / (loader_name.rstrip("s") + "s")
@@ -299,7 +315,7 @@ def main(
         loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
 
         loader_integration_tests_dir = None
-        if loader_name in ["sdb"]:
+        if loader_name in SINGULAR_MODULE_DIRS:
             loader_integration_tests_dir = loaders_integration_tests_path / loader_name.rstrip("s")
         else:
             loader_integration_tests_dir = loaders_integration_tests_path / (
