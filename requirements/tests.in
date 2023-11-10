@@ -1,2 +1,2 @@
 -r base.txt
-pytest
+pytest >= 7.2.0
