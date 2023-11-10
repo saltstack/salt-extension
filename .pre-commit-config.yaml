@@ -27,14 +27,14 @@ repos:
     rev: v2.37.2
     hooks:
       - id: pyupgrade
-        name: Rewrite Code to be Py3.6+
-        args: [--py36-plus]
+        name: Rewrite Code to be Py3.7+
+        args: [--py37-plus]
 
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v2.6.0
     hooks:
       - id: reorder-python-imports
-        args: [--py36-plus]
+        args: [--py37-plus]
 
   - repo: https://github.com/psf/black
     rev: 22.6.0
@@ -67,19 +67,8 @@ repos:
 # ----- Static Requirements --------------------------------------------------------------------->
   # ----- Testing Static Requirements ----------------------------------------------------------->
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: '4.1'
+    rev: '4.8'
     hooks:
-      - id: pip-tools-compile
-        alias: compile-3.6-test-requirements
-        name: Py3.6 Test Requirements
-        files: ^requirements/(base\.txt|tests\.in)$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.6
-          - --platform=linux
-          - requirements/tests.in
-
       - id: pip-tools-compile
         alias: compile-3.7-test-requirements
         name: Py3.7 Test Requirements
@@ -121,6 +110,28 @@ repos:
         args:
           - -v
           - --py-version=3.10
+          - --platform=linux
+          - requirements/tests.in
+
+      - id: pip-tools-compile
+        alias: compile-3.11-test-requirements
+        name: Py3.11 Test Requirements
+        files: ^requirements/(base\.txt|tests\.in)$
+        pass_filenames: false
+        args:
+          - -v
+          - --py-version=3.11
+          - --platform=linux
+          - requirements/tests.in
+
+      - id: pip-tools-compile
+        alias: compile-3.12-test-requirements
+        name: Py3.12 Test Requirements
+        files: ^requirements/(base\.txt|tests\.in)$
+        pass_filenames: false
+        args:
+          - -v
+          - --py-version=3.12
           - --platform=linux
           - requirements/tests.in
   # <---- Testing Static Requirements ------------------------------------------------------------
