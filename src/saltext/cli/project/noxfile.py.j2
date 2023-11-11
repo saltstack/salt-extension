@@ -149,10 +149,10 @@ def tests(session):
     args = [
         "--rootdir",
         str(REPO_ROOT),
-        "--log-file={}".format(RUNTESTS_LOGFILE.relative_to(REPO_ROOT)),
+        f"--log-file={RUNTESTS_LOGFILE.relative_to(REPO_ROOT)}",
         "--log-file-level=debug",
         "--show-capture=no",
-        "--junitxml={}".format(JUNIT_REPORT),
+        f"--junitxml={JUNIT_REPORT}",
         "--showlocals",
         "-ra",
         "-s",
@@ -169,7 +169,7 @@ def tests(session):
         for arg in session.posargs:
             if arg.startswith("-"):
                 continue
-            if arg.startswith("tests{}".format(os.sep)):
+            if arg.startswith(f"tests{os.sep}"):
                 break
             try:
                 pathlib.Path(arg).resolve().relative_to(REPO_ROOT / "tests")
@@ -253,7 +253,7 @@ def _lint(session, rcfile, flags, paths, tee_output=True):
         session.run("pylint", "--version")
         pylint_report_path = os.environ.get("PYLINT_REPORT")
 
-    cmd_args = ["pylint", "--rcfile={}".format(rcfile)] + list(flags) + list(paths)
+    cmd_args = ["pylint", f"--rcfile={rcfile}"] + list(flags) + list(paths)
 
     src_path = str(REPO_ROOT / "src")
     python_path_env_var = os.environ.get("PYTHONPATH") or None
@@ -323,8 +323,8 @@ def lint(session):
     """
     Run PyLint against the code and the test suite. Set PYLINT_REPORT to a path to capture output.
     """
-    session.notify("lint-code-{}".format(session.python))
-    session.notify("lint-tests-{}".format(session.python))
+    session.notify(f"lint-code-{session.python}")
+    session.notify(f"lint-tests-{session.python}")
 
 
 @nox.session(python="3", name="lint-code")
@@ -493,9 +493,7 @@ def docs_crosslink_info(session):
             f"You need to pass at least one argument whose value must be one of: {intersphinx_mapping_list}"
         )
     except KeyError:
-        session.error(
-            f"Only acceptable values for first argument are: {intersphinx_mapping_list}"
-        )
+        session.error(f"Only acceptable values for first argument are: {intersphinx_mapping_list}")
     session.run(
         "python", "-m", "sphinx.ext.intersphinx", mapping_entry[0].rstrip("/") + "/objects.inv"
     )

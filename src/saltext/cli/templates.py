@@ -130,7 +130,7 @@ def exampled(name):
     value = __salt__["{{package_name}}.example_function"](name)
     if value == name:
         ret["result"] = True
-        ret["comment"] = "The '{{package_name}}.example_function' returned: '{}'".format(value)
+        ret["comment"] = f"The '{{package_name}}.example_function' returned: '{value}'"
     return ret
 '''
 
@@ -219,7 +219,7 @@ def test_replace_this_this_with_something_meaningful():
         "name": echo_str,
         "changes": {},
         "result": True,
-        "comment": "The '{{package_name}}.example_function' returned: '{}'".format(echo_str),
+        "comment": f"The '{{package_name}}.example_function' returned: '{echo_str}'",
     }
     assert {{ package_name }}_state.exampled(echo_str) == expected
 """
