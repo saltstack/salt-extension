@@ -83,7 +83,7 @@ __virtualname__ = "{{ package_name }}"
 
 def __virtual__():
     # To force a module not to load return something like:
-    #   return (False, "The {{ project_name }} {{ loader_name }} module is not implemented yet")
+    #   return (False, "The {{ project_name }} execution module is not implemented yet")
     return __virtualname__
 
 
@@ -101,7 +101,7 @@ def example_function(text):
 '''
 
 STATE_LOADER_TEMPLATE = '''\
-{%- set loader_name = loader.rstrip("s") %}
+{%- set loader_name = loader.rstrip("s") -%}
 """
 Salt {{ loader_name }} module
 """
@@ -135,7 +135,7 @@ def exampled(name):
 '''
 
 SDB_LOADER_TEMPLATE = '''\
-{%- set loader_name = loader.rstrip("s") %}
+{%- set loader_name = loader.rstrip("s") -%}
 """
 Salt {{ loader_name }} module
 """
@@ -151,8 +151,8 @@ def __virtual__():
     #   return (False, "The {{ project_name }} {{ loader_name }} module is not implemented yet")
 
     # Replace this with your own logic
-    if "{{package_name}}.example_function" not in __salt__:
-        return False, "The '{{package_name}}' execution module is not available"
+    if "{{ package_name }}.example_function" not in __salt__:
+        return False, "The '{{ package_name }}' execution module is not available"
     return __virtualname__
 
 
@@ -164,7 +164,7 @@ def get(key, profile=None):
 
     .. code-block:: bash
 
-        salt '*' sdb.get "sdb://{{ package_name}}/foo"
+        salt '*' sdb.get "sdb://{{ package_name }}/foo"
     """
     return key
 '''
@@ -219,13 +219,13 @@ def test_replace_this_this_with_something_meaningful():
         "name": echo_str,
         "changes": {},
         "result": True,
-        "comment": f"The '{{package_name}}.example_function' returned: '{echo_str}'",
+        "comment": f"The '{{ package_name }}.example_function' returned: '{echo_str}'",
     }
     assert {{ package_name }}_state.exampled(echo_str) == expected
 """
 
 LOADER_SDB_UNIT_TEST_TEMPLATE = """\
-{%- set loader_name = loader.rstrip("s") %}
+{%- set loader_name = loader.rstrip("s") -%}
 import pytest
 import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
 
@@ -246,7 +246,7 @@ def test_replace_this_this_with_something_meaningful():
 """
 
 LOADER_UNIT_TEST_TEMPLATE = """\
-{%- set loader_name = loader.rstrip("s") %}
+{%- set loader_name = loader.rstrip("s") -%}
 import pytest
 import {{ package_namespace_pkg }}{{ package_name }}.{{ loader.rstrip("s") + "s" }}.{{ package_name }}_mod as {{ package_name }}_{{ loader_name }}
 
@@ -276,7 +276,7 @@ pytestmark = [
 
 def test_replace_this_this_with_something_meaningful(salt_call_cli):
     echo_str = "Echoed!"
-    ret = salt_call_cli.run("{{ package_name}}.example_function", echo_str)
+    ret = salt_call_cli.run("{{ package_name }}.example_function", echo_str)
     assert ret.exitcode == 0
     assert ret.json
     assert ret.json == echo_str
