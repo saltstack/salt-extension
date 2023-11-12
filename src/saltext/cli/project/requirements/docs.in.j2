@@ -2,4 +2,6 @@ sphinx
 sphinx-material-saltstack
 sphinx-prompt
 sphinxcontrib-spelling
+{%- if python_requires < (3, 8) %}
 importlib_metadata; python_version < "3.8"
+{%- endif %}
