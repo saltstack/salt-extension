@@ -119,7 +119,7 @@ SALT_PYTHON_SUPPORT = {
     expose_value=True,
 )
 @click.option(
-    "-V", "--salt-version", help="The minimum Salt version to target", default="3003", type=str
+    "-V", "--salt-version", help="The minimum Salt version to target", default="3005", type=str
 )
 @click.option(
     "--python-requires", help="The minimum Python version to support", default="", type=str
