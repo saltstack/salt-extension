@@ -62,13 +62,6 @@ where = src
 exclude =
     tests
 
-# When targetting Salt < 3003, you can remove the other 'options.entry_points' section and use this one
-#[options.entry_points]
-#salt.loader=
-#{%- for loader_name in loaders %}
-#  {{ loader_name }}_dirs = {{ package_namespace_pkg }}{{ package_name }}.loader:get_{{ loader_name }}_dirs
-#{%- endfor %}
-
 [options.entry_points]
 salt.loader=
   {{ package_namespace_pkg }}{{ project_name }} = {{ package_namespace_pkg }}{{ package_name }}

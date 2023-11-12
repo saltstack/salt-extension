@@ -20,7 +20,6 @@ from saltext.cli.templates import LOADER_SDB_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
-from saltext.cli.templates import LOADERS_TEMPLATE
 from saltext.cli.templates import MODULE_LOADER_TEMPLATE
 from saltext.cli.templates import PACKAGE_INIT
 from saltext.cli.templates import SDB_LOADER_TEMPLATE
@@ -307,9 +306,6 @@ def main(
     loaders_package_path.joinpath("__init__.py").write_text(
         Template(PACKAGE_INIT).render(**templating_context).rstrip() + "\n"
     )
-    loaders_package_path.joinpath("loader.py").write_text(
-        Template(LOADERS_TEMPLATE).render(**templating_context).rstrip() + "\n"
-    )
     loaders_unit_tests_path = destdir / "tests" / "unit"
     loaders_integration_tests_path = destdir / "tests" / "integration"
     for loader_name in loader:
@@ -390,12 +386,6 @@ def main(
             (reqdir / f"{extra}.txt").touch()
 
     click.secho("Bare bones project is created.", fg="bright_green", bold=True)
-    click.secho(
-        f"If the {project_name} extension should only target salt 3003 or "
-        "newer, edit 'setup.cfg', read the comment around 'options.entry-points', "
-        "and then run the following command:"
-    )
-    click.secho(f"  rm src/{package_namespace_path}{package_name}/loader.py")
     click.secho("You should now run the following commands:")
     click.secho(f"  python3 -m venv .env --prompt {project_name!r}")
     click.secho("  source .env/bin/activate")
