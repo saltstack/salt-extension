@@ -59,9 +59,9 @@ repos:
     rev: v2.37.2
     hooks:
       - id: pyupgrade
-        name: Rewrite Code to be Py3.6+
+        name: Rewrite Code to be Py{{ python_requires[:2] | join(".") }}+
         args: [
-          --py36-plus
+          --py{{ python_requires[:2] | join("") }}-plus
         ]
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
@@ -70,7 +70,7 @@ repos:
     hooks:
       - id: reorder-python-imports
         args: [
-          --py3-plus,
+          --py{{ python_requires[:2] | join("") }}-plus,
         ]
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
@@ -143,139 +143,46 @@ repos:
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
     rev: '4.1'
     hooks:
+{% for i in range(python_requires[1], max_python_minor + 1) %}
       - id: pip-tools-compile
-        alias: compile-3.6-test-requirements
-        name: Py3.6 Test Requirements
+        alias: compile-3.{{ i }}-test-requirements
+        name: Py3.{{ i }} Test Requirements
         files: ^requirements/tests.in$
         pass_filenames: false
         args:
           - -v
-          - --py-version=3.6
+          - --py-version=3.{{ i }}
           - --platform=linux
           - requirements/tests.in
-
-      - id: pip-tools-compile
-        alias: compile-3.7-test-requirements
-        name: Py3.7 Test Requirements
-        files: ^requirements/tests.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.7
-          - --platform=linux
-          - requirements/tests.in
-
-      - id: pip-tools-compile
-        alias: compile-3.8-test-requirements
-        name: Py3.8 Test Requirements
-        files: ^requirements/tests.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.8
-          - --platform=linux
-          - requirements/tests.in
-
-      - id: pip-tools-compile
-        alias: compile-3.9-test-requirements
-        name: Py3.9 Test Requirements
-        files: ^requirements/tests.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.9
-          - --platform=linux
-          - requirements/tests.in
+{% endfor %}
   # <---- Static Test Requirements ---------------------------------------------------------------
 
   # ----- Static Lint Requirements -------------------------------------------------------------->
+{% for i in range(python_requires[1], max_python_minor + 1) %}
       - id: pip-tools-compile
-        alias: compile-3.6-test-requirements
-        name: Py3.6 Lint Requirements
+        alias: compile-3.{{ i }}-test-requirements
+        name: Py3.{{ i }} Lint Requirements
         files: ^requirements/lint.in$
         pass_filenames: false
         args:
           - -v
-          - --py-version=3.6
+          - --py-version=3.{{ i }}
           - --platform=linux
           - requirements/lint.in
-
-      - id: pip-tools-compile
-        alias: compile-3.7-test-requirements
-        name: Py3.7 Lint Requirements
-        files: ^requirements/lint.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.7
-          - --platform=linux
-          - requirements/lint.in
-
-      - id: pip-tools-compile
-        alias: compile-3.8-test-requirements
-        name: Py3.8 Lint Requirements
-        files: ^requirements/lint.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.8
-          - --platform=linux
-          - requirements/lint.in
-
-      - id: pip-tools-compile
-        alias: compile-3.9-test-requirements
-        name: Py3.9 Lint Requirements
-        files: ^requirements/lint.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.9
-          - --platform=linux
-          - requirements/lint.in
+{% endfor %}
   # <---- Static Lint Requirements ---------------------------------------------------------------
 
   # ----- Static Docs Requirements -------------------------------------------------------------->
+{% for i in range(python_requires[1], max_python_minor + 1) %}
       - id: pip-tools-compile
-        alias: compile-3.6-test-requirements
-        name: Py3.6 Docs Requirements
+        alias: compile-3.{{ i }}-test-requirements
+        name: Py3.{{ i }} Docs Requirements
         files: ^requirements/docs.in$
         pass_filenames: false
         args:
           - -v
-          - --py-version=3.6
+          - --py-version=3.{{ i }}
           - --platform=linux
           - requirements/docs.in
-
-      - id: pip-tools-compile
-        alias: compile-3.7-test-requirements
-        name: Py3.7 Docs Requirements
-        files: ^requirements/docs.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.7
-          - --platform=linux
-          - requirements/docs.in
-
-      - id: pip-tools-compile
-        alias: compile-3.8-test-requirements
-        name: Py3.8 Docs Requirements
-        files: ^requirements/docs.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.8
-          - --platform=linux
-          - requirements/docs.in
-
-      - id: pip-tools-compile
-        alias: compile-3.9-test-requirements
-        name: Py3.9 Docs Requirements
-        files: ^requirements/docs.in$
-        pass_filenames: false
-        args:
-          - -v
-          - --py-version=3.9
-          - --platform=linux
-          - requirements/docs.in
+{% endfor %}
   # <---- Static Docs Requirements ---------------------------------------------------------------

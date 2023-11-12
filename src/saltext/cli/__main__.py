@@ -1,3 +1,4 @@
+import copy
 import datetime
 import os
 import pathlib
@@ -82,6 +83,15 @@ SINGULAR_MODULE_DIRS = (
     "wrapper",
 )
 
+CURRENT_LATEST_SALT = 3006
+SALT_PYTHON_SUPPORT = {
+    3003: {"min": (3, 5), "max": (3, 9)},
+    3004: {"min": (3, 5), "max": (3, 10)},
+    3005: {"min": (3, 5), "max": (3, 10)},
+    3006: {"min": (3, 7), "max": (3, 10)},
+    3007: {"min": (3, 8), "max": (3, 11)},
+}
+
 
 @click.command()
 @click.version_option(version=__version__)
@@ -111,6 +121,12 @@ SINGULAR_MODULE_DIRS = (
 )
 @click.option(
     "-V", "--salt-version", help="The minimum Salt version to target", default="3003", type=str
+)
+@click.option(
+    "--python-requires", help="The minimum Python version to support", default="", type=str
+)
+@click.option(
+    "--max-salt-version", help="The maximum Salt major version to support", default=CURRENT_LATEST_SALT, type=int
 )
 @click.option(
     "-l",
@@ -151,8 +167,32 @@ def main(
     salt_version: str,
     force_overwrite: bool,
     no_saltext_namespace: bool,
+    python_requires: str,
+    max_salt_version: int,
 ):
     destdir: pathlib.Path = pathlib.Path(dest)
+
+    try:
+        salt_version = float(salt_version)
+    except ValueError as err:
+        raise ValueError(f"Cannot parse Salt version: '{salt_version}'. Please specify it like `3006` or `3006.3`.") from err
+    if int(salt_version) == salt_version:
+        salt_version = int(salt_version)
+    if python_requires:
+        python_requires = tuple(int(x) for x in python_requires.split("."))
+        if not (3,) <= python_requires < (4,):
+            raise ValueError(f"Invalid Python version specified: '{python_requires}'. Example: '3.8'")
+    salt_python_requires = SALT_PYTHON_SUPPORT[int(salt_version)]["min"]
+    if not python_requires:
+        python_requires = salt_python_requires
+    elif salt_python_requires > python_requires:
+        click.secho(
+            f"The minimum Salt version ({salt_version}) requires a higher minimum Python "
+            f"version '{salt_python_requires}'. Adjusting accordingly.",
+            fg="bright_red",
+        )
+        python_requires = salt_python_requires
+    max_python_minor = SALT_PYTHON_SUPPORT[max_salt_version]["max"][1]
 
     templating_context: Dict[str, Any] = {
         "project_name": project_name,
@@ -162,6 +202,10 @@ def main(
         "url": url,
         "salt_version": salt_version,
         "copyright_year": datetime.datetime.today().year,
+        "python_requires": python_requires,
+        "max_python_minor": max_python_minor,
+        "max_salt_version": max_salt_version,
+        "salt_python_support": copy.deepcopy(SALT_PYTHON_SUPPORT),
     }
     if no_saltext_namespace:
         package_namespace = package_namespace_path = package_namespace_pkg = ""
@@ -337,6 +381,13 @@ def main(
         if loader_integration_test_module.exists() and not force_overwrite:
             loader_integration_test_module = loader_integration_test_module.with_suffix(".new")
         loader_integration_test_module.write_text(loader_integration_test_contents.rstrip() + "\n")
+
+    requirements_dir = destdir / "requirements"
+    for python_version in range(python_requires[1], max_python_minor + 1):
+        reqdir = requirements_dir / f"py3.{python_version}"
+        reqdir.mkdir(0o755, exist_ok=True)
+        for extra in ("docs", "lint", "tests"):
+            (reqdir / f"{extra}.txt").touch()
 
     click.secho("Bare bones project is created.", fg="bright_green", bold=True)
     click.secho(
