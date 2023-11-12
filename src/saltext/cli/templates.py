@@ -31,27 +31,6 @@ except ImportError:  # pragma: no cover
             pass
 """
 
-LOADERS_TEMPLATE = '''\
-"""
-Define the required entry-points functions in order for Salt to know
-what and from where it should load this extension's loaders
-"""
-from . import PACKAGE_ROOT  # pylint: disable=unused-import
-
-{% for loader in loaders %}
-  {%- set loader_docstring = loader.rstrip("s") %}
-  {%- if loader_docstring == "module" %}
-      {%- set loader_docstring = "execution" %}
-  {%- endif %}
-def get_{{ loader }}_dirs():
-    """
-    Return a list of paths from where salt should load {{ loader.rstrip("s") }} modules
-    """
-    return [str(PACKAGE_ROOT / "{{ loader.rstrip("s") + "s" }}")]
-
-{% endfor %}
-'''
-
 LOADER_TEMPLATE = '''\
 {%- set loader_name = loader.rstrip("s") -%}
 """
