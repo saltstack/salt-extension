@@ -47,9 +47,17 @@ setup_requires =
   setuptools>=50.3.2
   setuptools_scm[toml]>=3.4
   setuptools-declarative-requirements
-install_requires =
-  salt>={{ salt_version }}
-  # Add other module install requirements above this line
+
+[options.extras_require]
+dev =
+  nox
+  pre-commit>=2.4.0
+  pylint
+  SaltPyLint
+docsauto =
+  sphinx-autobuild
+changelog =
+  towncrier==22.12.0
 
 [options.packages.find]
 where = src
@@ -69,13 +77,10 @@ salt.loader=
 
 [requirements-files]
 install_requires = requirements/base.txt
-tests_require = requirements/tests.txt
 extras_require =
-  dev = requirements/dev.txt
-  tests = requirements/tests.txt
-  docs = requirements/docs.txt
-  docsauto = requirements/docs-auto.txt
-  changelog = requirements/changelog.txt
+  tests = requirements/tests.in
+  docs = requirements/docs.in
+  lint = requirements/lint.in
 
 [bdist_wheel]
 # Use this option if your package is pure-python
