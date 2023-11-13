@@ -2,7 +2,7 @@
 minimum_pre_commit_version: 2.4.0
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.4.0
     hooks:
       - id: check-merge-conflict  # Check for files that contain merge conflict strings.
       - id: trailing-whitespace   # Trims trailing whitespace.
@@ -37,7 +37,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: 1.3.3
+    rev: {{ "2.3.0" if python_requires < (3, 8) else "2.5.2" }}
     hooks:
       - id: salt-rewrite
         alias: rewrite-docstrings
@@ -47,7 +47,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: 1.3.3
+    rev: {{ "2.3.0" if python_requires < (3, 8) else "2.5.2" }}
     hooks:
       - id: salt-rewrite
         alias: rewrite-tests
@@ -66,7 +66,7 @@ repos:
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
 
   - repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.6.0
+    rev: v3.10.0
     hooks:
       - id: reorder-python-imports
         args: [
@@ -80,10 +80,8 @@ repos:
       - id: black
         args: [-l 100]
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
-        additional_dependencies:
-          - click<8.1.0
 
-  - repo: https://github.com/asottile/blacken-docs
+  - repo: https://github.com/adamchainz/blacken-docs
     rev: v1.12.1
     hooks:
       - id: blacken-docs
@@ -91,12 +89,11 @@ repos:
         files: ^(docs/.*\.rst|src/{{ package_namespace_path }}{{ package_name }}/.*\.py)$
         additional_dependencies:
           - black==22.6.0
-          - click<8.1.0
   # <---- Formatting -----------------------------------------------------------------------------
 
   # ----- Security ------------------------------------------------------------------------------>
   - repo: https://github.com/PyCQA/bandit
-    rev: "1.7.0"
+    rev: "1.7.4"
     hooks:
       - id: bandit
         alias: bandit-salt
@@ -104,7 +101,7 @@ repos:
         args: [--silent, -lll, --skip, B701]
         exclude: src/{{ package_namespace_path }}{{ package_name }}/version.py
   - repo: https://github.com/PyCQA/bandit
-    rev: "1.7.0"
+    rev: "1.7.4"
     hooks:
       - id: bandit
         alias: bandit-tests
@@ -141,7 +138,7 @@ repos:
 
   # ----- Static Test Requirements -------------------------------------------------------------->
   - repo: https://github.com/saltstack/pip-tools-compile-impersonate
-    rev: '4.1'
+    rev: '4.8'
     hooks:
 {% for i in range(python_requires[1], max_python_minor + 1) %}
       - id: pip-tools-compile
