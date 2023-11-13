@@ -268,6 +268,8 @@ def main(
         if "__pycache__" in src.parts:
             # We're not interested in python pyc cache files
             continue
+        if license == "other" and "LICENSE.j2" in src.parts:
+            continue
         dst_parts = []
         templating_context["loader"] = loader
         for part in src.relative_to(project_template_path).parts:
