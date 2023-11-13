@@ -301,7 +301,10 @@ def main(
                     fg="bright_red",
                 )
                 raise
-        dst.write_text(contents.rstrip() + "\n")
+        if contents:
+            dst.write_text(contents.rstrip() + "\n")
+        else:
+            dst.touch()
 
     loaders_package_path = destdir / "src" / package_namespace / package_name
     loaders_package_path.mkdir(0o755, parents=True)
