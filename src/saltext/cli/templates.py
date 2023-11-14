@@ -96,8 +96,8 @@ def __virtual__():
     #   return (False, "The {{ project_name }} {{ loader_name }} module is not implemented yet")
 
     # Replace this with your own logic
-    if "{{package_name}}.example_function" not in __salt__:
-        return False, "The '{{package_name}}' execution module is not available"
+    if "{{ package_name }}.example_function" not in __salt__:
+        return False, "The '{{ package_name }}' execution module is not available"
     return __virtualname__
 
 
@@ -106,10 +106,10 @@ def exampled(name):
     This example function should be replaced
     """
     ret = {"name": name, "changes": {}, "result": False, "comment": ""}
-    value = __salt__["{{package_name}}.example_function"](name)
+    value = __salt__["{{ package_name }}.example_function"](name)
     if value == name:
         ret["result"] = True
-        ret["comment"] = f"The '{{package_name}}.example_function' returned: '{value}'"
+        ret["comment"] = f"The '{{ package_name }}.example_function' returned: '{value}'"
     return ret
 '''
 

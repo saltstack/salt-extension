@@ -125,7 +125,10 @@ SALT_PYTHON_SUPPORT = {
     "--python-requires", help="The minimum Python version to support", default="", type=str
 )
 @click.option(
-    "--max-salt-version", help="The maximum Salt major version to support", default=CURRENT_LATEST_SALT, type=int
+    "--max-salt-version",
+    help="The maximum Salt major version to support",
+    default=CURRENT_LATEST_SALT,
+    type=int,
 )
 @click.option(
     "-l",
@@ -174,13 +177,18 @@ def main(
     try:
         salt_version = float(salt_version)
     except ValueError as err:
-        raise ValueError(f"Cannot parse Salt version: '{salt_version}'. Please specify it like `3006` or `3006.3`.") from err
+        raise ValueError(
+            f"Cannot parse Salt version: '{salt_version}'. "
+            "Please specify it like `3006` or `3006.3`."
+        ) from err
     if int(salt_version) == salt_version:
         salt_version = int(salt_version)
     if python_requires:
         python_requires = tuple(int(x) for x in python_requires.split("."))
         if not (3,) <= python_requires < (4,):
-            raise ValueError(f"Invalid Python version specified: '{python_requires}'. Example: '3.8'")
+            raise ValueError(
+                f"Invalid Python version specified: '{python_requires}'. Example: '3.8'"
+            )
     salt_python_requires = SALT_PYTHON_SUPPORT[int(salt_version)]["min"]
     if not python_requires:
         python_requires = salt_python_requires
