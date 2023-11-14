@@ -37,7 +37,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: {{ "2.3.0" if python_requires < (3, 8) else "2.5.2" }}
+    rev: {{ "2.2.0" if python_requires < (3, 8) else "2.5.2" }}
     hooks:
       - id: salt-rewrite
         alias: rewrite-docstrings
@@ -47,7 +47,7 @@ repos:
 
   - repo: https://github.com/s0undt3ch/salt-rewrite
     # Automatically rewrite code with known rules
-    rev: {{ "2.3.0" if python_requires < (3, 8) else "2.5.2" }}
+    rev: {{ "2.2.0" if python_requires < (3, 8) else "2.5.2" }}
     hooks:
       - id: salt-rewrite
         alias: rewrite-tests
