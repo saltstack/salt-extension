@@ -14,9 +14,11 @@ from click_params import SLUG
 from jinja2 import Template
 from saltext.cli import __version__
 from saltext.cli import PACKAGE_ROOT
+from saltext.cli.templates import LOADER_MODULE_FUNCTIONAL_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_MODULE_INTEGRATION_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_MODULE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_SDB_UNIT_TEST_TEMPLATE
+from saltext.cli.templates import LOADER_STATE_FUNCTIONAL_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_STATE_UNIT_TEST_TEMPLATE
 from saltext.cli.templates import LOADER_TEMPLATE
 from saltext.cli.templates import LOADER_UNIT_TEST_TEMPLATE
@@ -321,6 +323,7 @@ def main(
     )
     loaders_unit_tests_path = destdir / "tests" / "unit"
     loaders_integration_tests_path = destdir / "tests" / "integration"
+    loaders_functional_tests_path = destdir / "tests" / "functional"
     for loader_name in loader:
         templating_context["loader"] = loader_name
         loader_dir = None
@@ -368,6 +371,31 @@ def main(
         if loader_unit_test_module.exists() and not force_overwrite:
             loader_unit_test_module = loader_unit_test_module.with_suffix(".new")
         loader_unit_test_module.write_text(loader_unit_test_contents.rstrip() + "\n")
+
+        if loader_name in SINGULAR_MODULE_DIRS:
+            loader_functional_tests_dir = loaders_functional_tests_path / loader_name.rstrip("s")
+        else:
+            loader_functional_tests_dir = loaders_functional_tests_path / (
+                loader_name.rstrip("s") + "s"
+            )
+        loader_functional_tests_dir.mkdir(0o755, exist_ok=True)
+        loader_functional_tests_dir_init = loader_functional_tests_dir / "__init__.py"
+        if not loader_functional_tests_dir_init.exists():
+            loader_functional_tests_dir_init.write_text("")
+        if loader_name in ("module", "states"):
+            if loader_name == "states":
+                loader_test_template = LOADER_STATE_FUNCTIONAL_TEST_TEMPLATE
+            else:
+                loader_test_template = LOADER_MODULE_FUNCTIONAL_TEST_TEMPLATE
+            loader_functional_test_contents = Template(loader_test_template).render(
+                **templating_context
+            )
+            loader_functional_test_module = loader_functional_tests_dir / f"test_{package_name}.py"
+            if loader_functional_test_module.exists() and not force_overwrite:
+                loader_functional_test_module = loader_functional_test_module.with_suffix(".new")
+            loader_functional_test_module.write_text(
+                loader_functional_test_contents.rstrip() + "\n"
+            )
 
         loader_integration_tests_dir = None
         if loader_name in SINGULAR_MODULE_DIRS:
