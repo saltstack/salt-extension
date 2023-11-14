@@ -260,3 +260,43 @@ def test_replace_this_this_with_something_meaningful(salt_call_cli):
     assert ret.json
     assert ret.json == echo_str
 """
+
+LOADER_MODULE_FUNCTIONAL_TEST_TEMPLATE = """\
+import pytest
+
+pytestmark = [
+    pytest.mark.requires_salt_modules("{{ package_name }}.example_function"),
+]
+
+
+@pytest.fixture
+def {{ package_name }}(modules):
+    return modules.{{ package_name }}
+
+
+def test_replace_this_this_with_something_meaningful({{ package_name }}):
+    echo_str = "Echoed!"
+    res = {{ package_name }}.example_function(echo_str)
+    assert res == echo_str
+"""
+
+LOADER_STATE_FUNCTIONAL_TEST_TEMPLATE = """\
+import pytest
+
+pytestmark = [
+    pytest.mark.requires_salt_states("{{ package_name }}.exampled"),
+]
+
+
+@pytest.fixture
+def {{ package_name }}(states):
+    return states.{{ package_name }}
+
+
+def test_replace_this_this_with_something_meaningful({{ package_name }}):
+    echo_str = "Echoed!"
+    ret = {{ package_name }}.exampled(echo_str)
+    assert ret.result
+    assert not ret.changes
+    assert echo_str in ret.comment
+"""
