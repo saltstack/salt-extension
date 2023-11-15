@@ -6,13 +6,10 @@
 {{ header_ruler }}
 
 
+{% for loader in loaders %}
 .. toctree::
    :maxdepth: 2
 
-   ref/modules.rst
+   ref/{{ loader.rstrip("s") + ("" if loader in singular_loader_dirs else "s") }}/index
 
-
-.. toctree::
-   :maxdepth: 2
-
-   ref/states.rst
+{% endfor %}
