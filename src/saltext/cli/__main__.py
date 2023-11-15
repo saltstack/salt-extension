@@ -215,6 +215,7 @@ def main(
         "max_python_minor": max_python_minor,
         "max_salt_version": max_salt_version,
         "salt_python_support": copy.deepcopy(SALT_PYTHON_SUPPORT),
+        "singular_loader_dirs": SINGULAR_MODULE_DIRS,
     }
     if no_saltext_namespace:
         package_namespace = package_namespace_path = package_namespace_pkg = ""
