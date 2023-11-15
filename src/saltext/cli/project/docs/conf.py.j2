@@ -95,7 +95,7 @@ exclude_patterns = [
     "sitevars.rst",
 ]
 
-autosummary_generate = True
+autosummary_generate = False
 
 # -- Options for HTML output -------------------------------------------------
 
