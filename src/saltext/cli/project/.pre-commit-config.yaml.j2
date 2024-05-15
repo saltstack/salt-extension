@@ -118,7 +118,7 @@ repos:
         alias: lint-src
         name: Lint Source Code
         files: ^((setup|noxfile)|src/.*)\.py$
-        require_serial:true
+        require_serial: true
         args:
           - -e
           - lint-code-pre-commit
@@ -131,7 +131,7 @@ repos:
         alias: lint-tests
         name: Lint Tests
         files: ^tests/.*\.py$
-        require_serial:true
+        require_serial: true
         args:
           - -e
           - lint-tests-pre-commit
