@@ -1,3 +1,9 @@
+# !!Project is Archived!!
+
+> Salt Project / VMware has ended active development of this project, this repository will no longer be updated.
+
+- The community has created and maintained a better alternative to the development of Salt extensions: [salt-extensions/salt-extension-copier](https://github.com/salt-extensions/salt-extension-copier) (Create and maintain Salt extensions using Copier)
+
 # salt-extension
 
 > Tool to simplify the creation of a new salt extension.
